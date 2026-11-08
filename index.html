@@ -218,26 +218,32 @@ main,footer,.nav{position:relative;z-index:1}
 .lang em{font:400 11.5px var(--mono);font-style:normal;color:var(--muted)}
 
 .contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);margin-top:6vh}
-/* ambient side reels: break out of the content column, sit behind it, blurred and warm like old footage */
-.reels{position:absolute;top:0;bottom:0;left:calc(50% - 50vw);width:100vw;pointer-events:none;z-index:0;overflow:hidden}
-#about>*:not(.reels){position:relative;z-index:1}
-/* memories floating in space: each reel has its own depth (size, blur, opacity), drift path and breathing */
-.reel{position:absolute;margin:0;width:var(--w);opacity:var(--o);will-change:transform,translate,rotate,scale;
-  animation:var(--path) var(--dur) ease-in-out infinite,breathe calc(var(--dur) * .6) ease-in-out infinite;animation-delay:var(--delay),var(--delay)}
-.reel video{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:6px;
-  filter:blur(var(--blur)) sepia(30%) saturate(.8) brightness(.72) contrast(.95);
-  box-shadow:0 0 80px -10px color-mix(in srgb,#ffb070 18%,transparent);
-  -webkit-mask-image:radial-gradient(ellipse 72% 72% at 50% 50%,#000 42%,transparent 100%);mask-image:radial-gradient(ellipse 72% 72% at 50% 50%,#000 42%,transparent 100%)}
-.reel figcaption{margin-top:8px;text-align:center;font:500 9.5px var(--mono);letter-spacing:.18em;color:var(--muted);opacity:.75}
-/* near layers are larger and clearer, far layers smaller, softer, fainter */
-.r1{--w:min(40vw,640px);--o:.55;--blur:1.2px;--rot:-4deg;--path:floatA;--dur:19s;--delay:0s;top:20%;left:-9vw}
-.r2{--w:min(30vw,470px);--o:.38;--blur:2.4px;--rot:3deg;--path:floatB;--dur:23s;--delay:-6s;top:38%;right:-5vw}
-.r3{--w:min(36vw,560px);--o:.5;--blur:1.6px;--rot:2.5deg;--path:floatC;--dur:21s;--delay:-11s;top:57%;left:-7vw}
-.r4{--w:min(33vw,520px);--o:.44;--blur:2px;--rot:-2.5deg;--path:floatB;--dur:25s;--delay:-15s;top:76%;right:-8vw}
-@keyframes floatA{0%,100%{translate:0 0;rotate:var(--rot)}25%{translate:3vw -4vh;rotate:calc(var(--rot) + 2deg)}50%{translate:1vw -7vh;rotate:calc(var(--rot) - 1deg)}75%{translate:-2vw -3vh;rotate:calc(var(--rot) + 1deg)}}
-@keyframes floatB{0%,100%{translate:0 0;rotate:var(--rot)}30%{translate:-3vw -5vh;rotate:calc(var(--rot) - 2deg)}60%{translate:-1vw 3vh;rotate:calc(var(--rot) + 1.5deg)}80%{translate:2vw -2vh;rotate:var(--rot)}}
-@keyframes floatC{0%,100%{translate:0 0;rotate:var(--rot)}35%{translate:2.5vw 4vh;rotate:calc(var(--rot) + 2deg)}70%{translate:-2vw -4vh;rotate:calc(var(--rot) - 1.5deg)}}
-@keyframes breathe{0%,100%{scale:1}50%{scale:1.05}}
+/* ---------- memory field: a 3D fly-through of clips from my science videos ----------
+   A sticky stage with perspective; scrolling pushes every clip toward the camera.
+   Clips near the focus plane are sharp, the rest soften like a shallow depth of field. */
+.mem{position:relative;height:320vh}
+.mem-pin{position:sticky;top:0;height:100svh;overflow:hidden;perspective:1100px;perspective-origin:50% 45%;
+  background:radial-gradient(ellipse 80% 70% at 50% 45%,color-mix(in srgb,#ff9d4d 5%,transparent),transparent 70%)}
+.mem-space{position:absolute;inset:0;transform-style:preserve-3d}
+.mem-clip{position:absolute;left:50%;top:50%;width:var(--w);margin:0;transform-style:preserve-3d;will-change:transform,opacity,filter;opacity:0}
+.mem-clip video{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;
+  filter:sepia(18%) saturate(.9) brightness(.86);
+  box-shadow:0 40px 90px -40px #000,0 0 120px -30px color-mix(in srgb,#ff9d4d 22%,transparent);
+  -webkit-mask-image:radial-gradient(ellipse 78% 80% at 50% 50%,#000 58%,transparent 100%);mask-image:radial-gradient(ellipse 78% 80% at 50% 50%,#000 58%,transparent 100%)}
+.mem-clip figcaption{margin-top:10px;font:500 10px var(--mono);letter-spacing:.18em;color:var(--muted);text-align:center}
+.mem-copy{position:absolute;left:50%;top:50%;translate:-50% -50%;width:min(92vw,760px);text-align:center;z-index:5;pointer-events:none;
+  text-shadow:0 2px 30px #000,0 0 60px #000}
+.mem-copy .mono{display:block;margin-bottom:16px;color:var(--accent)}
+.mem-copy h2{font:800 clamp(30px,4.6vw,66px)/1 var(--display);font-stretch:125%;letter-spacing:-.015em;text-transform:uppercase;margin:0}
+.mem-copy h2 .thin{font-weight:100;display:block}
+.mem-copy p{margin:18px auto 0;max-width:46ch;color:color-mix(in srgb,var(--fg) 80%,var(--muted));font-size:clamp(15px,1.3vw,17px)}
+.mem-copy .badge-bjc{margin-top:18px}
+/* film grain + vignette on top of the field */
+.mem-grain{position:absolute;inset:-50%;z-index:4;pointer-events:none;opacity:.09;mix-blend-mode:overlay;animation:grain 1.2s steps(6) infinite;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.mem-pin::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;background:radial-gradient(ellipse 75% 70% at 50% 50%,transparent 55%,var(--bg) 100%)}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-4%,3%)}40%{transform:translate(3%,-5%)}60%{transform:translate(-2%,6%)}80%{transform:translate(5%,2%)}100%{transform:translate(0,0)}}
+
 .badge-bjc{display:inline-block;margin-top:12px;font:500 10px var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:5px 9px;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));border-radius:99px;color:var(--accent)}
 
 /* floating CAD sheets around the bio (outer div drifts, inner .log tilts) */
@@ -338,7 +344,13 @@ footer{border-top:1px solid var(--line);padding:26px var(--gxr) 26px var(--gx);d
   .ticker{grid-template-columns:repeat(2,minmax(0,1fr))}
   .about,.contact{grid-template-columns:minmax(0,1fr)}
   #about .big{max-width:none}
-  .reels{display:none}
+  .mem{height:auto}
+  .mem-pin{position:relative;height:auto;overflow:visible;perspective:none;display:grid;gap:22px;padding:12vh var(--gxr) 8vh var(--gx)}
+  .mem-pin::after,.mem-grain{display:none}
+  .mem-space{position:relative;inset:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .mem-clip{position:relative;left:auto;top:auto;width:auto!important;opacity:1}
+  .mem-clip video{-webkit-mask-image:none;mask-image:none}
+  .mem-copy{position:relative;left:auto;top:auto;translate:none;width:auto;order:-1;text-shadow:none}
   .f1{width:min(86%,360px);margin:0 0 18px auto}
   .f2{margin-left:0}
   .chrono::before{left:4px}
@@ -390,13 +402,6 @@ footer{border-top:1px solid var(--line);padding:26px var(--gxr) 26px var(--gx);d
   <div id="chapters"></div>
 
   <section class="block" id="about">
-    <!-- ambient side reels: soft, warm, half-remembered clips from my science videos -->
-    <div class="reels" aria-hidden="true">
-      <figure class="reel r1" data-depth=".22"><video src="media/vid-bjc-talk.mp4" poster="media/vid-bjc-talk.jpg" muted loop playsinline preload="none"></video><figcaption>REC // BJC_2026 · KAKEYA</figcaption></figure>
-      <figure class="reel r2" data-depth=".08"><video src="media/vid-minecraft.mp4" poster="media/vid-minecraft.jpg" muted loop playsinline preload="none"></video><figcaption>REC // MINECRAFT_EXPLAINER</figcaption></figure>
-      <figure class="reel r3" data-depth=".17"><video src="media/vid-history.mp4" poster="media/vid-history.jpg" muted loop playsinline preload="none"></video><figcaption>REC // HISTORY_SHORT · B&W</figcaption></figure>
-      <figure class="reel r4" data-depth=".12"><video src="media/vid-bjc-dissolve.mp4" poster="media/vid-bjc-dissolve.jpg" muted loop playsinline preload="none"></video><figcaption>REC // BJC_2026 · FACE → FIELD</figcaption></figure>
-    </div>
     <span class="mono scan">About</span>
     <h2 class="big">Slow start. <span class="thin">Steady build.</span></h2>
     <div class="about">
@@ -472,6 +477,27 @@ footer{border-top:1px solid var(--line);padding:26px var(--gxr) 26px var(--gx);d
           </figure>
         </div></li>
     </ol>
+  </section>
+
+  <!-- Memory field: clips from my science and history videos float in depth; scrolling flies through them -->
+  <section class="mem" id="memories" aria-label="Science videos">
+    <div class="mem-pin">
+      <div class="mem-space">
+        <figure class="mem-clip" data-x="-24" data-y="-16" data-z="0"    data-w="44" data-ry="14"  data-r="-2"><video src="media/vid-bjc-talk.mp4" poster="media/vid-bjc-talk.jpg" muted loop playsinline preload="none" aria-label="Explaining zero volume for the Breakthrough Junior Challenge video"></video><figcaption>BJC 2026 · ZERO VOLUME</figcaption></figure>
+        <figure class="mem-clip" data-x="27"  data-y="14"  data-z="-650" data-w="40" data-ry="-12" data-r="2"><video src="media/vid-history.mp4" poster="media/vid-history.jpg" muted loop playsinline preload="none" aria-label="History short: illustration dissolving into a black and white talking shot"></video><figcaption>HISTORY SHORT · FEARS TURN INTO FUEL</figcaption></figure>
+        <figure class="mem-clip" data-x="-22" data-y="18"  data-z="-1300" data-w="42" data-ry="10" data-r="1.5"><video src="media/vid-bjc-dissolve.mp4" poster="media/vid-bjc-dissolve.jpg" muted loop playsinline preload="none" aria-label="Face dissolving into a Kakeya needle animation"></video><figcaption>BJC 2026 · FACE TO FIELD</figcaption></figure>
+        <figure class="mem-clip" data-x="25"  data-y="-15" data-z="-1950" data-w="38" data-ry="-10" data-r="-2"><video src="media/vid-minecraft.mp4" poster="media/vid-minecraft.jpg" muted loop playsinline preload="none" aria-label="Minecraft explainer: reaction shot over gameplay"></video><figcaption>MINECRAFT EXPLAINER</figcaption></figure>
+        <figure class="mem-clip" data-x="-6"  data-y="-22" data-z="-2600" data-w="36" data-ry="4"  data-r="1"><video src="media/vid-mc-world.mp4" poster="media/vid-mc-world.jpg" muted loop playsinline preload="none" aria-label="Isometric Minecraft world growing from 16 by 16 to 48 by 48"></video><figcaption>16×16 → 48×48</figcaption></figure>
+        <figure class="mem-clip" data-x="8"   data-y="20"  data-z="-3200" data-w="34" data-ry="-6" data-r="-1"><video src="media/vid-bjc-cube.mp4" poster="media/vid-bjc-cube.jpg" muted loop playsinline preload="none" aria-label="Needles rotating inside a cube"></video><figcaption>KAKEYA · DIMENSION 3</figcaption></figure>
+      </div>
+      <div class="mem-copy">
+        <span class="mono">Side quests · 2025–26</span>
+        <h2>I make videos <span class="thin">to learn how to explain.</span></h2>
+        <p>Science and history shorts, shot and animated on my own. One became my Breakthrough Junior Challenge entry on the Kakeya conjecture.</p>
+        <span class="badge-bjc">BJC · submitted · results pending</span>
+      </div>
+      <div class="mem-grain" aria-hidden="true"></div>
+    </div>
   </section>
 
   <section class="block" id="contact">
@@ -562,7 +588,7 @@ document.querySelectorAll('[data-split]').forEach(el=>{el.innerHTML=split(el.tex
 
 
 /* dots + nav */
-const secs=[['intro','Intro'],['projects','Work'],['about','About'],['contact','Contact']];
+const secs=[['intro','Intro'],['projects','Work'],['about','About'],['memories','Videos'],['contact','Contact']];
 $('#dots').innerHTML=secs.map(([id])=>`<a href="#${id}" data-dot="${id}"></a>`).join('');
 
 /* ---------- dust canvas ---------- */
@@ -657,11 +683,38 @@ function activeSection(){
   const mid=H*.45;let cur='intro';
   secs.forEach(([id])=>{const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<=mid)cur=id});
   dotLinks.forEach(a=>a.classList.toggle('cur',a.dataset.dot===cur));
-  const top=cur==='projects'?'work':cur;
+  const top=cur==='projects'?'work':cur==='memories'?'about':cur;
   navLinks.forEach(a=>a.classList.toggle('cur',a.dataset.sec===top));
 }
 
-const reelEls=[...document.querySelectorAll('.reel')];
+/* ---------- memory field: fly the camera through the clips ---------- */
+const mem=$('#memories'),memClips=[...document.querySelectorAll('.mem-clip')].map(el=>({el,v:el.querySelector('video'),
+  x:+el.dataset.x,y:+el.dataset.y,z:+el.dataset.z,w:+el.dataset.w,ry:+el.dataset.ry,r:+el.dataset.r}));
+const memCopy=document.querySelector('.mem-copy');
+const TRAVEL=3700;   // how far (px in z) the camera flies over the section
+const FOCUS=-350;    // clips at this depth are sharpest
+function updateMem(){
+  if(!motionOK()){memClips.forEach(c=>{c.el.removeAttribute('style')});memCopy.style.opacity='';return}
+  const r=mem.getBoundingClientRect();if(r.bottom<0||r.top>H)return;
+  const p=clamp(-r.top/(r.height-H));
+  memClips.forEach(c=>{
+    const z=c.z+p*TRAVEL-200;
+    const near=clamp((z+3400)/900);           // fade in from the far distance
+    const gone=clamp(1-(z-180)/320);           // fade out as it passes the camera
+    const blur=Math.min(Math.abs(z-FOCUS)/260,7);
+    c.el.style.width=`${c.w}vw`;
+    c.el.style.opacity=(near*gone).toFixed(3);
+    c.el.style.filter=`blur(${blur.toFixed(2)}px)`;
+    c.el.style.transform=`translate(-50%,-50%) translate3d(${c.x+mouse.x*-2}vw,${c.y+mouse.y*-2}vh,${z.toFixed(0)}px) rotateY(${c.ry}deg) rotate(${c.r}deg)`;
+    const vis=near*gone>.05;
+    if(vis&&c.v.paused){c.v.preload='auto';c.v.play().catch(()=>{})}else if(!vis&&!c.v.paused)c.v.pause();
+  });
+  // the line of copy breathes in after the first clip passes and out at the end
+  memCopy.style.opacity=(clamp((p-.08)/.12)*clamp((1-p)/.12)).toFixed(3);
+}
+// small screens / reduced motion: play clips when they scroll into view
+const memIO=new IntersectionObserver(es=>es.forEach(e=>{if(motionOK())return;const v=e.target;e.isIntersecting?(v.preload='auto',v.play().catch(()=>{})):v.pause()}),{rootMargin:'80px 0px'});
+memClips.forEach(c=>memIO.observe(c.v));
 /* ---------- one rAF loop ---------- */
 const introIn=$('#introIn');
 function frame(){
@@ -677,12 +730,7 @@ function frame(){
   if(motionOK()){const k=Math.min(sy/H,1);introIn.style.transform=`translate3d(${(mouse.x*-14).toFixed(1)}px,${(k*-60).toFixed(1)}px,0)`;introIn.style.opacity=(1-k*.9).toFixed(3)}
   else{introIn.style.transform='';introIn.style.opacity=''}
   updateHx();
-  // reels: nearer layers drift faster against the scroll than far ones (depth parallax) and lean toward the cursor
-  if(motionOK())for(const rl of reelEls){
-    const r=rl.getBoundingClientRect();if(r.bottom<-200||r.top>H+200)continue;
-    const d=+rl.dataset.depth,off=(r.top+r.height/2-H/2)*-d;
-    rl.style.transform=`translate3d(${(mouse.x*-120*d).toFixed(1)}px,${off.toFixed(1)}px,0)`;
-  }
+  updateMem();
   activeSection();
   requestAnimationFrame(frame);
 }
@@ -710,13 +758,6 @@ document.querySelectorAll('.log').forEach(el=>{
   });
   el.addEventListener('pointerleave',()=>{el.style.removeProperty('--ry');el.style.removeProperty('--rx')});
 });
-
-/* ---------- ambient reels: play only while visible ---------- */
-const reelIO=new IntersectionObserver(es=>es.forEach(e=>{
-  const v=e.target;
-  if(e.isIntersecting&&!matchMedia('(prefers-reduced-motion:reduce)').matches){v.preload='auto';v.play().catch(()=>{})}else v.pause();
-}),{rootMargin:'100px 0px'});
-document.querySelectorAll('.reel video').forEach(v=>reelIO.observe(v));
 
 /* ---------- copy email ---------- */
 const mailA=document.querySelector('.mail'),copyMsg=$('#copyMsg');
