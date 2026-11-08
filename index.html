@@ -6,7 +6,7 @@
 <style>body{margin:0}img,video{max-width:100%}[hidden]{display:none!important}</style>
 <title>Nguyen Cao Hoang</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Nguyen Cao Hoang builds tools for his own bottlenecks: Haziverse, Inkwell, a Wi-Fi RC car and a personal study system.">
+<meta name="description" content="Portfolio of Nguyen Cao Hoang: Haziverse, Inkwell and a Wi-Fi RC car, built to fix real bottlenecks.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100,300;112,600;125,800&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -191,6 +191,15 @@ main,footer,.nav{position:relative;z-index:1}
 .lang em{font:400 11.5px var(--mono);font-style:normal;color:var(--muted)}
 
 .contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);margin-top:6vh}
+.life{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:14px;margin-top:8vh}
+.frame-life{margin:0;display:grid;gap:10px;min-width:0}
+.frame-life img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px;border:1px solid var(--line);filter:saturate(.85) contrast(1.05);transition:filter .4s,transform .5s cubic-bezier(.2,.8,.2,1)}
+.frame-life:hover img{filter:none;transform:translateY(-4px)}
+.mailrow{display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px;margin-top:6vh}
+.mail{font:600 clamp(18px,3.2vw,40px)/1.1 var(--display);font-stretch:112%;color:var(--fg);text-decoration:none;border-bottom:2px solid var(--accent);padding-bottom:4px;overflow-wrap:anywhere;transition:color .2s}
+.mail:hover{color:var(--accent)}
+.copy{cursor:pointer;font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;padding:9px 14px;border-radius:3px;border:1px solid var(--line);background:none;color:var(--fg);transition:border-color .2s,color .2s}
+.copy:hover{border-color:var(--accent);color:var(--accent)}
 .socials a{display:flex;justify-content:space-between;padding:15px 0;border-top:1px solid var(--line);text-decoration:none;font:500 13px var(--mono);transition:color .2s,padding .3s}
 .socials a:last-child{border-bottom:1px solid var(--line)}
 .socials a span{color:var(--muted)}
@@ -228,6 +237,8 @@ footer{border-top:1px solid var(--line);padding:26px var(--gxr) 26px var(--gx);d
   .cal.big{gap:2px}
   .ticker{grid-template-columns:repeat(2,minmax(0,1fr))}
   .about,.contact{grid-template-columns:minmax(0,1fr)}
+  .life{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .life .frame-life:first-child{grid-column:1/-1}
   .dots{display:none}
 }
 @media (max-width:560px){.nav nav a:not(.cta){display:none}.film span{display:none}}
@@ -262,7 +273,7 @@ footer{border-top:1px solid var(--line);padding:26px var(--gxr) 26px var(--gx);d
 
   <section class="ticker" aria-label="Key numbers">
     <div class="tick"><b><span data-count="30">30</span><span class="ar"> → </span>1<small>min</small></b><span class="mono">Per flashcard set</span></div>
-    <div class="tick"><b><span data-count="380">380</span><small>days</small></b><span class="mono">Planning streak</span></div>
+    <div class="tick"><b><span data-count="2">2</span><small>apps</small></b><span class="mono">Shipped, used daily</span></div>
     <div class="tick"><b><span data-count="1470">1470</span></b><span class="mono">SAT</span></div>
     <div class="tick"><b>8.0<small>/ 7.5</small></b><span class="mono">IELTS Reading / Writing</span></div>
   </section>
@@ -272,16 +283,18 @@ footer{border-top:1px solid var(--line);padding:26px var(--gxr) 26px var(--gx);d
 
   <section class="block" id="about">
     <span class="mono scan">About</span>
-    <h2 class="big">From the school fence <span class="thin">to the factory floor</span></h2>
+    <h2 class="big">Slow start. <span class="thin">Steady build.</span></h2>
     <div class="about">
       <div>
-        <p>As a kid, Chu Van An High School felt like the moon. Years later I walked in as a robotics club member.</p>
-        <p>Now I want to design production systems that waste less time, energy and material.</p>
+        <p>I was an average student who learned to speak up before I learned to study.</p>
+        <p>I grow by trying, falling short and redesigning how I work. Next, I want to design production systems that waste less time, energy and material.</p>
         <ol class="path">
-          <li><time>GRADE 8</time><span>City science fair prize, as our team's presenter</span></li>
-          <li><time>GRADE 9</time><span>Physics from 0 to 5/10 in a year. Learned to build systems</span></li>
-          <li><time>GRADE 11</time><span>Taught myself Onshape CAD at the robotics club</span></li>
-          <li><time>2026</time><span>Shipped Haziverse and Inkwell, built the RC car</span></li>
+          <li><time>PRIMARY</time><span>Average grades. English was my weakest subject</span></li>
+          <li><time>GRADE 6–8</time><span>Changed schools, grades rose to ~9.2/10. Learned to present and won a city science fair prize</span></li>
+          <li><time>GRADE 9</time><span>Chased a specialised physics class from zero and fell short. Learned that effort needs a system</span></li>
+          <li><time>GRADE 10</time><span>Rebuilt how I study on my own. Presented or led most group projects</span></li>
+          <li><time>GRADE 11</time><span>Joined inter-school clubs and a robotics club; taught myself CAD</span></li>
+          <li><time>2026</time><span>Shipped Haziverse and Inkwell, built the RC car. Next: engineering in Taiwan</span></li>
         </ol>
       </div>
       <div class="skills">
@@ -295,24 +308,20 @@ footer{border-top:1px solid var(--line);padding:26px var(--gxr) 26px var(--gx);d
         </div></div>
       </div>
     </div>
+    <div class="life">
+      <figure class="frame-life"><img src="media/life-desk.jpg" alt="Study desk at night with notes, calculator and laptop" loading="lazy"><figcaption class="mono">Where most of the work happens</figcaption></figure>
+      <figure class="frame-life"><img src="media/life-list.jpg" alt="Handwritten daily task list with every item ticked" loading="lazy"><figcaption class="mono">A daily list, ticked by hand</figcaption></figure>
+      <figure class="frame-life"><img src="media/life-calendar.jpg" alt="Desk calendar for July 2026 with most days shaded green" loading="lazy"><figcaption class="mono">Green day: the list got done</figcaption></figure>
+    </div>
   </section>
 
   <section class="block" id="contact">
     <span class="mono scan">Contact</span>
     <h2 class="big">Let's build something <span class="thin">that works.</span></h2>
-    <div class="contact">
-      <div class="socials">
-        <a href="#" aria-label="Email, add your address">Email <span>your-email@example.com</span></a>
-        <a href="#" aria-label="GitHub, add your profile">GitHub <span>add link ↗</span></a>
-        <a href="#" aria-label="LinkedIn, add your profile">LinkedIn <span>add link ↗</span></a>
-        <a href="https://haziverseggit.vercel.app/" target="_blank" rel="noopener">Haziverse <span>live app ↗</span></a>
-      </div>
-      <form id="form" novalidate>
-        <label for="f-name">Name<input id="f-name" name="name" autocomplete="name" placeholder="Your name"></label>
-        <label for="f-msg">Message<textarea id="f-msg" name="message" placeholder="What would you like to talk about?"></textarea></label>
-        <button class="btn" type="submit">Copy message →</button>
-        <p class="formmsg" id="formmsg" role="status"></p>
-      </form>
+    <div class="mailrow">
+      <a class="mail" href="mailto:nguyencaohoang011222@gmail.com">nguyencaohoang011222@gmail.com</a>
+      <button class="copy" id="copyMail" type="button">Copy</button>
+      <span class="formmsg" id="copyMsg" role="status"></span>
     </div>
   </section>
 </main>
@@ -342,11 +351,7 @@ const P=[
   steps:['Upload failed, no error. I quit in Grade 11.','The culprit: a charge-only USB cable.','Drives on command. Stops if the phone drops.'],
   metric:'Auto-stop on disconnect',chips:['NodeMCU ESP8266','L298 driver','Embedded web server'],
   extra:'film',
-  frames:[['rc-1','Upload finally verified'],['rc-2','First sign of life: the LED blinks'],['rc-3','L298 driver on the chassis'],['rc-5','Driving from the phone page'],['rc.mp4','Night test run']]},
- {id:'study-os',title:['Study','OS'],kind:'Personal system',status:'Running daily',tagline:'A planner built to survive bad days.',
-  steps:['Nine tutoring sessions a week. Burned out.','Fixed vs flexible tasks. Misses roll over.','380 days. One or two off-days a month.'],
-  metric:'380 days',chips:['Scheduling','Habit design','Anki'],
-  frames:[]}
+  frames:[['rc-1','Upload finally verified'],['rc-2','First sign of life: the LED blinks'],['rc-3','L298 driver on the chassis'],['rc-5','Driving from the phone page'],['rc.mp4','Night test run']]}
 ];
 const FILM=[['GRADE 11','First try, gave up'],['OCT 2026','Restart on NodeMCU'],['22 OCT','First drive'],['26 OCT','Wheel tests'],['NEXT','Obstacle avoidance']];
 const ROAD=['V1 CSV','V2 PDF','V3 Links','V4 Collect','V5 Social'];
@@ -376,9 +381,7 @@ $('#chapters').innerHTML=P.map((p,ci)=>`
       ${p.link?`<a class="live" href="${p.link}" target="_blank" rel="noopener">Open live app ↗</a>`:''}
       ${p.download?`<div class="dl"><a class="dl-btn" href="${p.download.href}" rel="noopener"><span aria-hidden="true">↓</span>${p.download.label}<small>${p.download.size}</small></a><details><summary>How to install</summary><p>${p.download.note}</p></details></div>`:''}
     </div>
-    ${p.frames.length
-      ?`<div class="stage">${p.frames.map((f,fi)=>media(f[0],f[1],ci,fi)).join('')}<div class="cap"><b>01</b><span>${p.frames[0][1]}</span></div></div>`
-      :`<div class="stage cal-stage"><div class="cal-head"><span class="mono">Oct 2025</span><span class="mono" id="calCount">Day 0 / 380</span><span class="mono">Nov 2026</span></div><div class="cal big" aria-label="380 tracked days, about one or two missed per month"></div><div class="legend"><span class="g">All tasks done</span><span class="b">One task missed</span><span>Pattern shows the real rate, not exact dates</span></div></div>`}
+    <div class="stage">${p.frames.map((f,fi)=>media(f[0],f[1],ci,fi)).join('')}<div class="cap"><b>01</b><span>${p.frames[0][1]}</span></div></div>
   </div>
 </section>`).join('');
 
@@ -390,9 +393,6 @@ document.querySelectorAll('.frame img').forEach(img=>img.addEventListener('error
 document.querySelectorAll('.frame video').forEach(v=>v.addEventListener('error',()=>v.closest('.frame').classList.add('missing')));
 document.querySelectorAll('[data-split]').forEach(el=>{el.innerHTML=split(el.textContent)});
 
-/* study calendar cells */
-const cal=$('.cal');let seed=7;const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
-const calCells=[];if(cal){for(let i=0;i<380;i++){const c=document.createElement('i');c.dataset.m=rnd()<.05?1:0;cal.appendChild(c);calCells.push(c)}}
 
 /* dots + nav */
 const secs=[['intro','Intro'],...P.map(p=>[p.id,p.title.join('')]),['about','About'],['contact','Contact']];
@@ -433,10 +433,6 @@ function updateChapter(c){
   c.steps.forEach((li,i)=>{li.classList.toggle('act',i===s);li.classList.toggle('past',i<s)});
   c.rail.forEach((ri,i)=>ri.style.setProperty('--f',clamp(p*3-i).toFixed(3)));
   c.film.forEach((li,i)=>li.classList.toggle('act',i===Math.min(c.film.length-1,Math.floor(p*c.film.length))));
-  if(calCells.length&&c.el.id==='study-os'){
-    const k=motionOK()?Math.round(clamp(p*1.15)*380):380;
-    if(k!==c.k){c.k=k;calCells.forEach((x,i)=>x.className=i<k?(x.dataset.m==1?'b':'g'):'');const cc=document.getElementById('calCount');if(cc)cc.textContent=`Day ${k} / 380`}
-  }
   if(n&&act!==c.last){
     c.last=act;const f=c.frames[act];
     c.cap.innerHTML=`<b>${String(act+1).padStart(2,'0')}/${String(n).padStart(2,'0')}</b><span>${f.dataset.cap}</span>`;
@@ -512,13 +508,12 @@ document.addEventListener('click',e=>{const f=e.target.closest('.frame');if(f)op
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLB();if(e.key==='Enter'&&document.activeElement.classList.contains('frame'))openLB(document.activeElement)});
 $('#lbClose').addEventListener('click',closeLB);lb.addEventListener('click',e=>{if(e.target===lb)closeLB()});
 
-/* ---------- contact form: copies a ready message ---------- */
-const form=$('#form'),msg=$('#formmsg');
-form.addEventListener('submit',e=>{
-  e.preventDefault();const n=form.name.value.trim(),m=form.message.value.trim();
-  if(!n||!m){msg.textContent='Add your name and a message first.';return}
-  const fallback=()=>{form.message.select();msg.textContent='Text selected. Copy it with Ctrl+C.'};
-  try{navigator.clipboard.writeText(`From: ${n}\n\n${m}`).then(()=>{msg.textContent='Message copied. Paste it into an email.'},fallback)}catch(_){fallback()}
+/* ---------- copy email ---------- */
+const mailA=document.querySelector('.mail'),copyMsg=$('#copyMsg');
+$('#copyMail').addEventListener('click',()=>{
+  const addr=mailA.textContent.trim();
+  const fallback=()=>{const r=document.createRange();r.selectNodeContents(mailA);const s=getSelection();s.removeAllRanges();s.addRange(r);copyMsg.textContent='Selected. Press Ctrl+C.'};
+  try{navigator.clipboard.writeText(addr).then(()=>{copyMsg.textContent='Copied.'},fallback)}catch(_){fallback()}
 });
 })();
 </script>
