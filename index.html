@@ -218,6 +218,20 @@ main,footer,.nav{position:relative;z-index:1}
 .lang em{font:400 11.5px var(--mono);font-style:normal;color:var(--muted)}
 
 .contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);margin-top:6vh}
+/* ambient side reels: break out of the content column, sit behind it, blurred and warm like old footage */
+.reels{position:absolute;top:0;bottom:0;left:calc(50% - 50vw);width:100vw;pointer-events:none;z-index:0;overflow:hidden}
+#about>*:not(.reels){position:relative;z-index:1}
+.reel{position:absolute;margin:0;width:min(24vw,380px);opacity:.42;animation:drift 14s ease-in-out infinite}
+.reel video{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:4px;
+  filter:blur(1.6px) sepia(30%) saturate(.8) brightness(.7) contrast(.95);
+  -webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 45%,transparent 100%);mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 45%,transparent 100%)}
+.reel figcaption{margin-top:6px;text-align:center;font:500 9px var(--mono);letter-spacing:.16em;color:var(--muted);opacity:.8}
+.r1{top:30%;left:-5vw;rotate:-3deg}
+.r2{top:44%;right:-4vw;rotate:2.5deg;animation-delay:-4s}
+.r3{top:63%;left:-3vw;rotate:2deg;animation-delay:-8s}
+.r4{top:80%;right:-5vw;rotate:-2deg;animation-delay:-11s}
+.badge-bjc{display:inline-block;margin-top:12px;font:500 10px var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:5px 9px;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));border-radius:99px;color:var(--accent)}
+
 /* floating CAD sheets around the bio (outer div drifts, inner .log tilts) */
 #about{position:relative}
 #about .big{max-width:min(62%,760px)}
@@ -316,6 +330,7 @@ footer{border-top:1px solid var(--line);padding:26px var(--gxr) 26px var(--gx);d
   .ticker{grid-template-columns:repeat(2,minmax(0,1fr))}
   .about,.contact{grid-template-columns:minmax(0,1fr)}
   #about .big{max-width:none}
+  .reels{display:none}
   .f1{width:min(86%,360px);margin:0 0 18px auto}
   .f2{margin-left:0}
   .chrono::before{left:4px}
@@ -367,6 +382,13 @@ footer{border-top:1px solid var(--line);padding:26px var(--gxr) 26px var(--gx);d
   <div id="chapters"></div>
 
   <section class="block" id="about">
+    <!-- ambient side reels: soft, warm, half-remembered clips from my science videos -->
+    <div class="reels" aria-hidden="true">
+      <figure class="reel r1"><video src="media/vid-bjc-talk.mp4" poster="media/vid-bjc-talk.jpg" muted loop playsinline preload="none"></video><figcaption>REC // BJC_2026 · KAKEYA</figcaption></figure>
+      <figure class="reel r2"><video src="media/vid-minecraft.mp4" poster="media/vid-minecraft.jpg" muted loop playsinline preload="none"></video><figcaption>REC // MINECRAFT_EXPLAINER</figcaption></figure>
+      <figure class="reel r3"><video src="media/vid-history.mp4" poster="media/vid-history.jpg" muted loop playsinline preload="none"></video><figcaption>REC // HISTORY_SHORT</figcaption></figure>
+      <figure class="reel r4"><video src="media/vid-bjc-anim.mp4" poster="media/vid-bjc-anim.jpg" muted loop playsinline preload="none"></video><figcaption>REC // BJC_2026 · ANIMATION</figcaption></figure>
+    </div>
     <span class="mono scan">About</span>
     <h2 class="big">Slow start. <span class="thin">Steady build.</span></h2>
     <div class="about">
@@ -425,7 +447,8 @@ footer{border-top:1px solid var(--line);padding:26px var(--gxr) 26px var(--gx);d
             <figcaption><span>Build day at the robotics club</span><span>REC</span></figcaption>
           </figure>
         </div></li>
-      <li class="row t-r has-media last"><div class="txt"><time>2026</time><p>Shipped Haziverse and Inkwell, built the RC car. Next: engineering in Taiwan.</p></div>
+      <li class="row t-r"><div class="txt"><time>2025–26</time><p>Made short science and history videos to learn editing and animation. Entered the Breakthrough Junior Challenge with a video on the Kakeya conjecture.</p><span class="badge-bjc">BJC · submitted · results pending</span></div></li>
+      <li class="row t-l has-media last"><div class="txt"><time>2026</time><p>Shipped Haziverse and Inkwell, built the RC car. Next: engineering in Taiwan.</p></div>
         <div class="media stack">
           <figure class="log tall" style="--r:-2deg">
             <span class="k tl">+</span><span class="k tr">+</span><span class="k bl">+</span><span class="k br">+</span>
@@ -672,6 +695,13 @@ document.querySelectorAll('.log').forEach(el=>{
   });
   el.addEventListener('pointerleave',()=>{el.style.removeProperty('--ry');el.style.removeProperty('--rx')});
 });
+
+/* ---------- ambient reels: play only while visible ---------- */
+const reelIO=new IntersectionObserver(es=>es.forEach(e=>{
+  const v=e.target;
+  if(e.isIntersecting&&!matchMedia('(prefers-reduced-motion:reduce)').matches){v.preload='auto';v.play().catch(()=>{})}else v.pause();
+}),{rootMargin:'100px 0px'});
+document.querySelectorAll('.reel video').forEach(v=>reelIO.observe(v));
 
 /* ---------- copy email ---------- */
 const mailA=document.querySelector('.mail'),copyMsg=$('#copyMsg');
