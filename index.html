@@ -191,10 +191,41 @@ main,footer,.nav{position:relative;z-index:1}
 .lang em{font:400 11.5px var(--mono);font-style:normal;color:var(--muted)}
 
 .contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);margin-top:6vh}
-.life{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:14px;margin-top:8vh}
-.frame-life{margin:0;display:grid;gap:10px;min-width:0}
-.frame-life img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px;border:1px solid var(--line);filter:saturate(.85) contrast(1.05);transition:filter .4s,transform .5s cubic-bezier(.2,.8,.2,1)}
-.frame-life:hover img{filter:none;transform:translateY(-4px)}
+/* growth timeline */
+.chrono{position:relative;list-style:none;margin:12vh 0 0;padding:0}
+.chrono::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(transparent,var(--line) 6%,var(--line) 94%,transparent)}
+.row{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:clamp(40px,7vw,96px);align-items:start;padding:26px 0}
+.row::before{content:"";position:absolute;left:50%;top:34px;width:9px;height:9px;translate:-50% 0;border-radius:50%;border:1px solid var(--muted);background:var(--bg)}
+.row.last::before{border-color:var(--accent);background:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 22%,transparent)}
+.txt{min-width:0;max-width:34ch}
+.t-l .txt{grid-column:1;justify-self:end;text-align:right}
+.t-r .txt{grid-column:2}
+.row .media{grid-column:1;grid-row:1;justify-self:end;width:min(100%,420px);min-width:0}
+.txt time{display:block;font:500 11px var(--mono);letter-spacing:.14em;color:var(--muted);margin-bottom:8px}
+.row.last .txt time{color:var(--accent)}
+.txt p{margin:0;font:300 clamp(17px,1.7vw,21px)/1.35 var(--display);font-stretch:112%}
+.has-media{padding-block:44px}
+
+/* photo framed as a retrieved system log */
+.log{position:relative;margin:0;padding:24px 12px 32px;border:1px solid rgba(255,255,255,.15);background:color-mix(in srgb,var(--panel) 88%,transparent);
+  transform:perspective(900px) rotate(var(--r,0deg)) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px));
+  transition:transform .4s ease,border-color .4s ease,box-shadow .4s ease;overflow:hidden;box-shadow:0 22px 44px -26px #000}
+.log img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;filter:grayscale(40%) contrast(105%) brightness(90%);transition:filter .4s ease}
+.log.tall img{aspect-ratio:4/5}
+.log .k{position:absolute;font:400 11px/1 var(--mono);color:rgba(255,255,255,.45);pointer-events:none}
+.log .tl{top:6px;left:6px}.log .tr{top:6px;right:6px}.log .bl{bottom:6px;left:6px}.log .br{bottom:6px;right:6px}
+.log .tag-l,.log .tag-r{position:absolute;top:7px;font:500 9px/1 var(--mono);letter-spacing:.12em;color:var(--muted);white-space:nowrap}
+.log .tag-l{left:22px}.log .tag-r{right:22px}
+.log figcaption{position:absolute;left:22px;right:22px;bottom:9px;display:flex;justify-content:space-between;gap:10px;font:500 9.5px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:color-mix(in srgb,var(--fg) 70%,var(--muted))}
+.log figcaption span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.log::after{content:"";position:absolute;inset:-1px;pointer-events:none;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.16) 50%,transparent 62%);transform:translateX(-130%)}
+.log:hover{--ty:-6px;border-color:color-mix(in srgb,var(--accent) 60%,transparent);box-shadow:0 28px 56px -26px #000,0 0 32px -10px color-mix(in srgb,var(--accent) 45%,transparent);z-index:5}
+.log:hover img{filter:none}
+.log:hover::after{transform:translateX(130%);transition:transform .9s ease}
+/* stacked documents: the calendar overlaps the checklist's lower corner */
+.stack{display:grid}
+.stack .log:first-child{width:70%;z-index:1}
+.stack .log:last-child{width:66%;justify-self:end;margin-top:-34%;z-index:2}
 .mailrow{display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px;margin-top:6vh}
 .mail{font:600 clamp(18px,3.2vw,40px)/1.1 var(--display);font-stretch:112%;color:var(--fg);text-decoration:none;border-bottom:2px solid var(--accent);padding-bottom:4px;overflow-wrap:anywhere;transition:color .2s}
 .mail:hover{color:var(--accent)}
@@ -237,8 +268,11 @@ footer{border-top:1px solid var(--line);padding:26px var(--gxr) 26px var(--gx);d
   .cal.big{gap:2px}
   .ticker{grid-template-columns:repeat(2,minmax(0,1fr))}
   .about,.contact{grid-template-columns:minmax(0,1fr)}
-  .life{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-  .life .frame-life:first-child{grid-column:1/-1}
+  .chrono::before{left:4px}
+  .row{grid-template-columns:minmax(0,1fr);row-gap:22px;padding-left:28px}
+  .row::before{left:4px;top:30px}
+  .t-l .txt,.t-r .txt{grid-column:1;justify-self:start;text-align:left}
+  .row .media{grid-column:1;grid-row:2;justify-self:start;width:min(100%,380px)}
   .dots{display:none}
 }
 @media (max-width:560px){.nav nav a:not(.cta){display:none}.film span{display:none}}
@@ -288,14 +322,6 @@ footer{border-top:1px solid var(--line);padding:26px var(--gxr) 26px var(--gx);d
       <div>
         <p>I was an average student who learned to speak up before I learned to study.</p>
         <p>I grow by trying, falling short and redesigning how I work. Next, I want to design production systems that waste less time, energy and material.</p>
-        <ol class="path">
-          <li><time>PRIMARY</time><span>Average grades. English was my weakest subject</span></li>
-          <li><time>GRADE 6–8</time><span>Changed schools, grades rose to ~9.2/10. Learned to present and won a city science fair prize</span></li>
-          <li><time>GRADE 9</time><span>Chased a specialised physics class from zero and fell short. Learned that effort needs a system</span></li>
-          <li><time>GRADE 10</time><span>Rebuilt how I study on my own. Presented or led most group projects</span></li>
-          <li><time>GRADE 11</time><span>Joined inter-school clubs and a robotics club; taught myself CAD</span></li>
-          <li><time>2026</time><span>Shipped Haziverse and Inkwell, built the RC car. Next: engineering in Taiwan</span></li>
-        </ol>
       </div>
       <div class="skills">
         <div><h3>Software</h3><div class="chips"><span class="chip">Product design</span><span class="chip">UI/UX</span><span class="chip">AI-assisted dev</span><span class="chip">TypeScript</span><span class="chip">Electron</span><span class="chip">Supabase</span></div></div>
@@ -308,11 +334,37 @@ footer{border-top:1px solid var(--line);padding:26px var(--gxr) 26px var(--gx);d
         </div></div>
       </div>
     </div>
-    <div class="life">
-      <figure class="frame-life"><img src="media/life-desk.jpg" alt="Study desk at night with notes, calculator and laptop" loading="lazy"><figcaption class="mono">Where most of the work happens</figcaption></figure>
-      <figure class="frame-life"><img src="media/life-list.jpg" alt="Handwritten daily task list with every item ticked" loading="lazy"><figcaption class="mono">A daily list, ticked by hand</figcaption></figure>
-      <figure class="frame-life"><img src="media/life-calendar.jpg" alt="Desk calendar for July 2026 with most days shaded green" loading="lazy"><figcaption class="mono">Green day: the list got done</figcaption></figure>
-    </div>
+    <!-- Growth timeline: zigzag around a centre spine; photos sit beside the years they belong to, framed as retrieved logs -->
+    <ol class="chrono" aria-label="Timeline">
+      <li class="row t-l"><div class="txt"><time>PRIMARY</time><p>Average grades. English was my weakest subject.</p></div></li>
+      <li class="row t-r"><div class="txt"><time>GRADE 6–8</time><p>Changed schools and climbed to ~9.2/10. Learned to present; won a city science fair prize.</p></div></li>
+      <li class="row t-l"><div class="txt"><time>GRADE 9</time><p>Chased a specialised physics class from zero and fell short. Effort needs a system.</p></div></li>
+      <li class="row t-r has-media"><div class="txt"><time>GRADE 10</time><p>Rebuilt how I study, on my own terms. Presented or led most group projects.</p></div>
+        <div class="media">
+          <figure class="log" style="--r:-1.6deg">
+            <span class="k tl">+</span><span class="k tr">+</span><span class="k bl">+</span><span class="k br">+</span>
+            <span class="tag-l">SYS_REC_01 // 22.12.2025</span><span class="tag-r">LOC_HA_NOI</span>
+            <img src="media/life-desk.jpg" alt="Study desk at night with notes, calculator and laptop" loading="lazy">
+            <figcaption><span>Where most of the work happens</span><span>01/03</span></figcaption>
+          </figure>
+        </div></li>
+      <li class="row t-l"><div class="txt"><time>GRADE 11</time><p>Joined inter-school clubs and a robotics club. Taught myself CAD.</p></div></li>
+      <li class="row t-r has-media last"><div class="txt"><time>2026</time><p>Shipped Haziverse and Inkwell, built the RC car. Next: engineering in Taiwan.</p></div>
+        <div class="media stack">
+          <figure class="log tall" style="--r:-2deg">
+            <span class="k tl">+</span><span class="k tr">+</span><span class="k bl">+</span><span class="k br">+</span>
+            <span class="tag-l">SYS_REC_02 // 14.10.2026</span><span class="tag-r">TASK_LOG</span>
+            <img src="media/life-list.jpg" alt="Handwritten daily task list with every item ticked" loading="lazy">
+            <figcaption><span>A daily list, ticked by hand</span><span>02/03</span></figcaption>
+          </figure>
+          <figure class="log" style="--r:3deg">
+            <span class="k tl">+</span><span class="k tr">+</span><span class="k bl">+</span><span class="k br">+</span>
+            <span class="tag-l">SYS_REC_03 // 07.2026</span><span class="tag-r">CAL_VIEW</span>
+            <img src="media/life-calendar.jpg" alt="Desk calendar for July 2026 with most days shaded green" loading="lazy">
+            <figcaption><span>Green day: the list got done</span><span>03/03</span></figcaption>
+          </figure>
+        </div></li>
+    </ol>
   </section>
 
   <section class="block" id="contact">
@@ -507,6 +559,16 @@ function closeLB(){lb.classList.remove('on');setTimeout(()=>{fig.innerHTML=''},3
 document.addEventListener('click',e=>{const f=e.target.closest('.frame');if(f)openLB(f)});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLB();if(e.key==='Enter'&&document.activeElement.classList.contains('frame'))openLB(document.activeElement)});
 $('#lbClose').addEventListener('click',closeLB);lb.addEventListener('click',e=>{if(e.target===lb)closeLB()});
+
+/* ---------- timeline logs: tilt toward the cursor ---------- */
+document.querySelectorAll('.log').forEach(el=>{
+  el.addEventListener('pointermove',e=>{
+    if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+    const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    el.style.setProperty('--ry',(x*10).toFixed(2)+'deg');el.style.setProperty('--rx',(-y*8).toFixed(2)+'deg');
+  });
+  el.addEventListener('pointerleave',()=>{el.style.removeProperty('--ry');el.style.removeProperty('--rx')});
+});
 
 /* ---------- copy email ---------- */
 const mailA=document.querySelector('.mail'),copyMsg=$('#copyMsg');
