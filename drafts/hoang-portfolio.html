@@ -1,0 +1,466 @@
+<title>Nguyen Cao Hoang</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Nguyen Cao Hoang: Hanoi student building tools for his own bottlenecks, heading to Taiwan to study engineering for industrial automation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,500;112,700;125,800&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: a factory spec sheet. Thin blueprint rules, mono machine-tags, one safety-orange accent for actions and live states. */
+:root{
+  --bg:#0c0e11; --panel:#12151a; --line:#232830; --fg:#e8eaed; --muted:#8b939d; --accent:#ff7a1a;
+  --ok:#3ccf7a; --miss:#3b82f6;
+  --display:'Archivo','Arial Narrow',system-ui,sans-serif;
+  --body:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+  --wrap:1120px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{background:var(--bg);color:var(--fg);font:400 16px/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bg)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tag{font:500 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+.grid-bg{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:64px 64px;opacity:.35;
+  -webkit-mask-image:radial-gradient(ellipse 90% 60% at 70% 0%,#000 10%,transparent 70%);mask-image:radial-gradient(ellipse 90% 60% at 70% 0%,#000 10%,transparent 70%)}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--bg) 72%,transparent);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font:800 15px var(--display);font-stretch:125%;letter-spacing:.02em}
+.logo i{display:grid;place-items:center;width:28px;height:28px;border:1.5px solid var(--accent);color:var(--accent);font:500 11px var(--mono);font-style:normal;border-radius:3px}
+.nav nav{display:flex;gap:clamp(14px,2.6vw,30px);align-items:center}
+.nav nav a{text-decoration:none;font:500 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:color .2s}
+.nav nav a:hover,.nav nav a.cur{color:var(--fg)}
+.nav nav a.cta{color:var(--bg);background:var(--accent);padding:8px 14px;border-radius:4px}
+.nav nav a.cta:hover{color:var(--bg);filter:brightness(1.1)}
+
+/* ---------- hero ---------- */
+.hero{padding-block:clamp(48px,9vw,110px) clamp(40px,6vw,72px)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(28px,5vw,64px);align-items:end}
+.status{display:inline-flex;align-items:center;gap:10px;padding:7px 12px;border:1px solid var(--line);border-radius:99px;background:var(--panel);font:400 12px var(--mono);color:var(--muted);margin-bottom:28px}
+.status b{position:relative;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.status b::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--accent);animation:ping 1.8s ease-out infinite}
+@keyframes ping{from{opacity:.7;transform:scale(1)}to{opacity:0;transform:scale(3.2)}}
+.hero h1{font-size:clamp(38px,6.4vw,78px);line-height:.98;font-weight:800;font-stretch:125%;letter-spacing:-.015em}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .lede{max-width:52ch;color:var(--muted);font-size:clamp(16px,1.6vw,18px);margin:24px 0 32px}
+.hero .lede strong{color:var(--fg);font-weight:500}
+.btns{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font:500 13px var(--mono);letter-spacing:.06em;padding:13px 20px;border-radius:4px;border:1px solid var(--line);transition:transform .2s,border-color .2s,background .2s}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.btn:hover{transform:translateY(-2px);border-color:var(--fg)}
+.btn.primary:hover{border-color:var(--accent);filter:brightness(1.08)}
+.btn span{transition:transform .2s}.btn:hover span{transform:translateX(3px)}
+
+/* spec sheet */
+.spec{border:1px solid var(--line);background:var(--panel);border-radius:6px;overflow:hidden}
+.spec header{display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line)}
+.spec dl{margin:0;display:grid;grid-template-columns:1fr 1fr}
+.spec dl div{padding:16px;border-bottom:1px solid var(--line);min-width:0}
+.spec dl div:nth-child(odd){border-right:1px solid var(--line)}
+.spec dl div:nth-last-child(-n+2){border-bottom:0}
+.spec dt{font:500 10.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.spec dd{margin:0;font:700 clamp(22px,2.6vw,30px)/1.05 var(--display);font-stretch:112%;font-variant-numeric:tabular-nums}
+.spec dd small{display:block;font:400 12px/1.4 var(--body);color:var(--muted);margin-top:6px}
+.spec dd .ar{color:var(--accent)}
+
+/* ---------- sections ---------- */
+section.block{padding-block:clamp(56px,8vw,96px);border-top:1px solid var(--line)}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:24px;align-items:end;margin-bottom:clamp(32px,5vw,52px)}
+.sec-head h2{font-size:clamp(28px,4vw,46px);font-weight:800;font-stretch:125%;line-height:1;margin-top:10px}
+.sec-head p{margin:0;color:var(--muted);max-width:58ch}
+
+/* ---------- case studies ---------- */
+.cases{display:grid;gap:24px}
+.case{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:clamp(20px,3vw,32px);
+  transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .3s}
+.case:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--accent) 55%,var(--line));box-shadow:0 18px 40px -24px color-mix(in srgb,var(--accent) 40%,transparent)}
+.case-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:12px 24px;margin-bottom:22px}
+.case h3{font-size:clamp(24px,3vw,34px);font-weight:800;font-stretch:125%;line-height:1}
+.case .one{color:var(--muted);margin:8px 0 0;max-width:60ch}
+.pill{display:inline-flex;align-items:center;gap:8px;font:500 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:6px 10px;border-radius:99px;border:1px solid var(--line);white-space:nowrap}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--muted)}
+.pill.live{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}.pill.live::before{background:var(--accent)}
+.pill.ship::before{background:var(--fg)}
+.pill.wip{color:var(--fg)}.pill.wip::before{background:var(--accent);animation:blink 1.4s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+.flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));position:relative;margin-bottom:22px}
+.flow::before{content:"";position:absolute;left:0;right:0;top:9px;height:1px;background:var(--line)}
+.step{position:relative;padding:28px 20px 0 0;min-width:0}
+.step::before{content:"";position:absolute;top:4px;left:0;width:11px;height:11px;border-radius:50%;background:var(--bg);border:1.5px solid var(--muted)}
+.step:last-child::before{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 22%,transparent)}
+.step .tag{display:block;margin-bottom:10px}
+.step:last-child .tag{color:var(--accent)}
+.step ul{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.step li{position:relative;padding-left:14px;font-size:14.5px;line-height:1.5;color:color-mix(in srgb,var(--fg) 82%,var(--muted))}
+.step li::before{content:"";position:absolute;left:0;top:.62em;width:5px;height:1px;background:var(--muted)}
+.step li b{color:var(--fg);font-weight:500}
+.metric{font:700 15px var(--display);font-stretch:112%;color:var(--fg)}
+
+.case-foot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:14px;padding-top:18px;border-top:1px dashed var(--line)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:400 12px var(--mono);padding:4px 9px;border-radius:3px;background:color-mix(in srgb,var(--fg) 6%,transparent);color:color-mix(in srgb,var(--fg) 80%,var(--muted))}
+.link{font:500 12px var(--mono);letter-spacing:.06em;color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
+.link:hover{border-color:var(--accent)}
+.link.muted{color:var(--muted)}
+
+/* progress log (RC car) */
+.log{display:flex;gap:0;margin:0 0 22px;padding:0;list-style:none;overflow-x:auto;border:1px solid var(--line);border-radius:6px}
+.log li{flex:1 0 150px;padding:12px 14px;border-right:1px solid var(--line);min-width:0}
+.log li:last-child{border-right:0}
+.log time{display:block;font:500 11px var(--mono);color:var(--muted);letter-spacing:.08em;margin-bottom:4px}
+.log span{font-size:13.5px;line-height:1.4}
+.log li.now time{color:var(--accent)}
+
+/* roadmap (Haziverse) */
+.road{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:0 0 22px}
+.road div{padding:10px 12px;border-radius:4px;border:1px solid var(--line);min-width:0}
+.road div.done{background:color-mix(in srgb,var(--accent) 12%,transparent);border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
+.road b{display:block;font:500 11px var(--mono);color:var(--accent);margin-bottom:4px}
+.road div:not(.done) b{color:var(--muted)}
+.road span{font-size:12.5px;line-height:1.35;color:var(--muted)}
+.road div.done span{color:var(--fg)}
+
+/* study-system calendar */
+.cal-wrap{margin:0 0 22px;overflow-x:auto}
+.cal{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,9px);gap:3px;width:max-content}
+.cal i{width:9px;height:9px;border-radius:2px;background:var(--ok);opacity:.85}
+.cal i.m{background:var(--miss);opacity:1}
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:10px;font:400 12px var(--mono);color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:7px;vertical-align:-1px;background:var(--ok)}
+.legend span.b::before{background:var(--miss)}
+
+/* ---------- about ---------- */
+.about{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:clamp(28px,5vw,64px)}
+.bio p{margin:0 0 16px;color:color-mix(in srgb,var(--fg) 84%,var(--muted));max-width:58ch}
+.bio p:first-child{font:700 clamp(20px,2.2vw,24px)/1.3 var(--display);font-stretch:112%;color:var(--fg)}
+.path{list-style:none;margin:28px 0 0;padding:0;border-left:1px solid var(--line)}
+.path li{position:relative;padding:0 0 18px 20px}
+.path li::before{content:"";position:absolute;left:-4px;top:7px;width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.path li:last-child::before{background:var(--accent)}
+.path time{font:500 11px var(--mono);letter-spacing:.08em;color:var(--muted)}
+.path div{font-size:14.5px}
+.skills{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.skill{background:var(--panel);padding:20px;min-width:0}
+.skill h3{font:700 15px var(--display);font-stretch:112%;margin:8px 0 12px}
+.skill .chips{gap:6px}
+.lang{display:grid;gap:10px;margin-top:4px}
+.lang div{display:grid;grid-template-columns:76px minmax(0,1fr) auto;gap:10px;align-items:center;font-size:13px}
+.bar{height:4px;border-radius:2px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.lang em{font:400 12px var(--mono);font-style:normal;color:var(--muted)}
+
+/* ---------- contact ---------- */
+.contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(28px,5vw,64px)}
+.contact h2{font-size:clamp(30px,4.6vw,56px);font-weight:800;font-stretch:125%;line-height:1}
+.contact .note{color:var(--muted);max-width:44ch;margin:18px 0 26px}
+.socials{display:grid;gap:0;border-top:1px solid var(--line)}
+.socials a{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);text-decoration:none;font:500 13px var(--mono);letter-spacing:.04em;transition:color .2s,padding .2s}
+.socials a span{color:var(--muted)}
+.socials a:hover{color:var(--accent);padding-left:6px}
+form{display:grid;gap:14px;border:1px solid var(--line);border-radius:8px;padding:clamp(18px,3vw,28px);background:var(--panel)}
+label{display:grid;gap:6px;font:500 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+input,textarea{font:400 15px var(--body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:11px 12px;width:100%;transition:border-color .2s}
+input:focus,textarea:focus{outline:none;border-color:var(--accent)}
+textarea{min-height:120px;resize:vertical}
+form button{justify-self:start;cursor:pointer;font:500 13px var(--mono);letter-spacing:.06em;padding:13px 20px;border-radius:4px;border:0;background:var(--accent);color:var(--bg)}
+.formmsg{font-size:13.5px;color:var(--muted);min-height:1.4em;margin:0}
+
+footer{border-top:1px solid var(--line);padding-block:28px}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+
+/* load sequence */
+.in{animation:rise .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d,0s)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+@media (max-width:880px){
+  .hero .wrap,.sec-head,.about,.contact{grid-template-columns:minmax(0,1fr)}
+  .road{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .nav nav a:not(.cta){display:none}
+  .flow{grid-template-columns:minmax(0,1fr)}
+  .flow::before{left:5px;right:auto;top:0;bottom:0;width:1px;height:auto}
+  .step{padding:0 0 20px 26px}.step::before{top:5px}
+  .skills{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+
+<div class="grid-bg" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="#top"><i>NCH</i>Nguyen Cao Hoang</a>
+    <nav aria-label="Sections">
+      <a href="#work" data-sec="work">Work</a>
+      <a href="#about" data-sec="about">About</a>
+      <a class="cta" href="#contact" data-sec="contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <div class="status in"><b></b>Now building: obstacle avoidance for my Wi-Fi RC car</div>
+        <h1 class="in" style="--d:.08s">I redesign the process instead of <em>pushing harder.</em></h1>
+        <p class="lede in" style="--d:.16s"><strong>Hanoi student heading to Taiwan to study engineering for industrial automation.</strong> When something wastes my time, I build a tool for it: two study apps I use every day, a personal planning system, and now a phone-controlled car.</p>
+        <div class="btns in" style="--d:.24s">
+          <a class="btn primary" href="#work">See my projects <span>→</span></a>
+          <a class="btn" href="#about">About me</a>
+        </div>
+      </div>
+      <aside class="spec in" style="--d:.3s" aria-label="Key numbers">
+        <header><span class="tag">Spec sheet</span><span class="tag">2026</span></header>
+        <dl>
+          <div><dt>Flashcard prep</dt><dd>30<span class="ar"> → </span>1 min<small>per 50-word set, with Haziverse</small></dd></div>
+          <div><dt>Planning streak</dt><dd>380 days<small>1–2 off-days a month since Oct 2025</small></dd></div>
+          <div><dt>SAT</dt><dd>1470<small>September 2026</small></dd></div>
+          <div><dt>IELTS</dt><dd>R 8.0 · W 7.5<small>first official test</small></dd></div>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===================== WORK ===================== -->
+  <section class="block" id="work">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><span class="tag">Work</span><h2>Selected projects</h2></div>
+        <p>Each project started with a bottleneck in my own day. They are laid out as problem, turning point and result. I design the features and interface and ship the product; AI tools write most of the code.</p>
+      </div>
+
+      <div class="cases">
+
+        <!-- Haziverse -->
+        <article class="case">
+          <div class="case-top">
+            <div><span class="tag">Web app · Vocabulary</span><h3>Haziverse</h3><p class="one">Turns a word list, article, PDF, photo or YouTube link into ready-to-study flashcards with a spaced-repetition schedule.</p></div>
+            <span class="pill live">Live</span>
+          </div>
+          <div class="flow">
+            <div class="step"><span class="tag">Problem</span><ul>
+              <li>SAT prep meant about <b>50 new words</b> per practice set.</li>
+              <li>Making each set by hand took <b>~30 minutes</b> of lookups and copying.</li>
+            </ul></div>
+            <div class="step"><span class="tag">Turning point</span><ul>
+              <li>Mapped the manual workflow, then cut it to <b>upload → AI → preview → export</b>.</li>
+              <li>Added Traditional Chinese with Pinyin for my Taiwan prep.</li>
+            </ul></div>
+            <div class="step"><span class="tag">Result</span><ul>
+              <li><span class="metric">30 min → 1 min</span> per set.</li>
+              <li>Part of the prep behind a <b>1470 SAT</b>; still my daily Chinese tool.</li>
+            </ul></div>
+          </div>
+          <div class="road" aria-label="Product roadmap">
+            <div class="done"><b>V1</b><span>Paste words, AI cards, CSV export</span></div>
+            <div class="done"><b>V2</b><span>PDF input, CEFR level filter</span></div>
+            <div class="done"><b>V3</b><span>Web, YouTube and photo input</span></div>
+            <div><b>V4</b><span>Word collection and profile stats</span></div>
+            <div><b>V5</b><span>Battles, trading, study feed</span></div>
+          </div>
+          <div class="case-foot">
+            <div class="chips"><span class="chip">Gemini API</span><span class="chip">Supabase</span><span class="chip">Google sign-in</span><span class="chip">Spaced repetition</span><span class="chip">Vercel</span></div>
+            <a class="link" href="https://haziverseggit.vercel.app/" target="_blank" rel="noopener">Open live app ↗</a>
+          </div>
+        </article>
+
+        <!-- Inkwell -->
+        <article class="case">
+          <div class="case-top">
+            <div><span class="tag">Desktop app · Writing coach</span><h3>Inkwell</h3><p class="one">A Windows app that scores IELTS essays, shows each error against the original and walks you through the rewrite.</p></div>
+            <span class="pill ship">v1.9.2 shipped</span>
+          </div>
+          <div class="flow">
+            <div class="step"><span class="tag">Problem</span><ul>
+              <li>Writing practice meant jumping between a scorer, a grammar checker and a notes file.</li>
+              <li>Feedback was scattered, so the same mistakes came back.</li>
+            </ul></div>
+            <div class="step"><span class="tag">Turning point</span><ul>
+              <li>Put scoring, an error diff and guided rewriting <b>in one window</b>.</li>
+              <li>Filters by error type: grammar, collocation, spelling.</li>
+              <li>Task 1 charts open beside the essay during review.</li>
+            </ul></div>
+            <div class="step"><span class="tag">Result</span><ul>
+              <li><span class="metric">IELTS Writing 7.5</span> in my first official test.</li>
+              <li>Packaged installer with a one-click updater; <b>39 automated checks</b> pass.</li>
+            </ul></div>
+          </div>
+          <div class="case-foot">
+            <div class="chips"><span class="chip">Electron</span><span class="chip">TypeScript</span><span class="chip">AI scoring</span><span class="chip">Windows installer</span></div>
+            <span class="link muted">Demo video on request</span>
+          </div>
+        </article>
+
+        <!-- RC car -->
+        <article class="case">
+          <div class="case-top">
+            <div><span class="tag">Hardware · Embedded</span><h3>Wi-Fi RC car</h3><p class="one">A car driven from a phone browser. The board hosts its own Wi-Fi network and control page, no app needed.</p></div>
+            <span class="pill wip">In progress</span>
+          </div>
+          <ol class="log" aria-label="Progress log">
+            <li><time>GRADE 11</time><span>First try with ESP8266 + L298. Code would not upload; I stopped.</span></li>
+            <li><time>OCT 2026</time><span>Restarted on a NodeMCU board with built-in USB.</span></li>
+            <li><time>22 OCT</time><span>First drive: forward, back and turns from the phone.</span></li>
+            <li><time>26 OCT</time><span>Wheel-by-wheel tests to trace a drift to one side.</span></li>
+            <li class="now"><time>NEXT</time><span>Fix drift, add ultrasonic obstacle avoidance and a route camera.</span></li>
+          </ol>
+          <div class="flow">
+            <div class="step"><span class="tag">Problem</span><ul>
+              <li>Hardware gives slow feedback, and I am used to software's fast loop.</li>
+              <li>An upload kept failing with no error to explain it.</li>
+            </ul></div>
+            <div class="step"><span class="tag">Turning point</span><ul>
+              <li>Found the cause: a <b>charge-only USB cable</b> with no data wires.</li>
+              <li>Wired motors through the L298 and served a control page over the board's own Wi-Fi.</li>
+            </ul></div>
+            <div class="step"><span class="tag">Result</span><ul>
+              <li>Drives on command and <b>stops by itself</b> if the phone disconnects.</li>
+              <li>First physical project I kept at until it worked.</li>
+            </ul></div>
+          </div>
+          <div class="case-foot">
+            <div class="chips"><span class="chip">NodeMCU ESP8266</span><span class="chip">L298 driver</span><span class="chip">DC motors</span><span class="chip">Embedded web server</span><span class="chip">Fail-safe stop</span></div>
+            <span class="link muted">Build videos on request</span>
+          </div>
+        </article>
+
+        <!-- Study system -->
+        <article class="case">
+          <div class="case-top">
+            <div><span class="tag">Personal system · Scheduling</span><h3>Study OS</h3><p class="one">A planning system built to survive bad days. It is a small scheduler with priorities and roll-over rules.</p></div>
+            <span class="pill live">Running daily</span>
+          </div>
+          <div class="flow">
+            <div class="step"><span class="tag">Problem</span><ul>
+              <li>Grade 9: up to <b>9 tutoring sessions a week</b>, studying until 2 a.m.</li>
+              <li>Effort without a system left me exhausted.</li>
+            </ul></div>
+            <div class="step"><span class="tag">Turning point</span><ul>
+              <li>V1 hourly schedule broke in days. V2 to-do list lost its streak.</li>
+              <li>V3 expects disruption: <b>fixed vs flexible tasks</b>, and unfinished tasks roll over.</li>
+            </ul></div>
+            <div class="step"><span class="tag">Result</span><ul>
+              <li><span class="metric">380 days</span> tracked since October 2025.</li>
+              <li>Only <b>1–2 non-green days</b> a month.</li>
+            </ul></div>
+          </div>
+          <div class="cal-wrap" aria-label="Calendar of tracked days, illustrative">
+            <div class="cal" id="cal"></div>
+            <div class="legend"><span>All tasks done</span><span class="b">One task missed</span><span>Pattern illustrates the real rate, not exact dates</span></div>
+          </div>
+          <div class="case-foot">
+            <div class="chips"><span class="chip">Constraint scheduling</span><span class="chip">Habit design</span><span class="chip">Anki</span></div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ABOUT ===================== -->
+  <section class="block" id="about">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><span class="tag">About</span><h2>From the fence to the factory floor</h2></div>
+        <p>As a kid I passed the gates of Chu Van An High School and believed it was out of reach. Years later I walked in as a robotics club member, and it felt ordinary. What had changed was me.</p>
+      </div>
+      <div class="about">
+        <div class="bio">
+          <p>I want to design production systems that waste less time, energy and material.</p>
+          <p>Taiwan builds much of the world's hardware, which is why I am applying there for mechatronics and smart manufacturing. After graduating I plan to work in factory automation for a few years, then lead engineering teams.</p>
+          <ol class="path">
+            <li><time>GRADE 8</time><div>Presented our team's sound-button computer for visually impaired users. City science fair prize.</div></li>
+            <li><time>GRADE 9</time><div>Went from 0 to 5/10 in competition physics in one year. Not enough to get in; it taught me to build systems.</div></li>
+            <li><time>GRADE 10–11</time><div>Presented in about 80% of our group projects and led the rest.</div></li>
+            <li><time>GRADE 11</time><div>Joined inter-school student clubs; taught myself CAD in Onshape at the Chu Van An robotics club.</div></li>
+            <li><time>2026</time><div>Shipped Haziverse and Inkwell, took the SAT and IELTS, built the RC car.</div></li>
+          </ol>
+        </div>
+        <div class="skills">
+          <div class="skill"><span class="tag">Product &amp; software</span><h3>Ship tools people use</h3>
+            <div class="chips"><span class="chip">Product design</span><span class="chip">UI/UX</span><span class="chip">AI-assisted dev</span><span class="chip">TypeScript</span><span class="chip">Electron</span><span class="chip">Supabase</span><span class="chip">LLM prompting</span></div></div>
+          <div class="skill"><span class="tag">Hardware</span><h3>Learning by building</h3>
+            <div class="chips"><span class="chip">ESP8266 / NodeMCU</span><span class="chip">Motor drivers</span><span class="chip">Wiring &amp; debugging</span><span class="chip">Onshape CAD</span></div></div>
+          <div class="skill"><span class="tag">People</span><h3>Present and coordinate</h3>
+            <div class="chips"><span class="chip">Public speaking</span><span class="chip">Team lead</span><span class="chip">Task delegation</span><span class="chip">Slide design</span><span class="chip">Video editing</span></div></div>
+          <div class="skill"><span class="tag">Languages</span><h3>Three working languages</h3>
+            <div class="lang">
+              <div><span>Vietnamese</span><span class="bar"><i style="width:100%"></i></span><em>Native</em></div>
+              <div><span>English</span><span class="bar"><i style="width:85%"></i></span><em>IELTS R8.0 W7.5</em></div>
+              <div><span>Chinese</span><span class="bar"><i style="width:50%"></i></span><em>≈ HSK 4</em></div>
+            </div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACT ===================== -->
+  <section class="block" id="contact">
+    <div class="wrap contact">
+      <div>
+        <span class="tag">Contact</span>
+        <h2 style="margin-top:10px">Let's build something that works.</h2>
+        <p class="note">Open to lab, club and internship conversations in automation and hardware. Demo videos of Inkwell and the RC car are available on request.</p>
+        <div class="socials">
+          <a href="#" aria-label="Email (add your address)">Email <span>your-email@example.com</span></a>
+          <a href="#" aria-label="GitHub (add your profile)">GitHub <span>add link ↗</span></a>
+          <a href="#" aria-label="LinkedIn (add your profile)">LinkedIn <span>add link ↗</span></a>
+          <a href="https://haziverseggit.vercel.app/" target="_blank" rel="noopener">Haziverse <span>live app ↗</span></a>
+        </div>
+      </div>
+      <form id="form" novalidate>
+        <label for="f-name">Name<input id="f-name" name="name" autocomplete="name" placeholder="Your name"></label>
+        <label for="f-email">Email<input id="f-email" name="email" type="email" autocomplete="email" placeholder="you@school.edu"></label>
+        <label for="f-msg">Message<textarea id="f-msg" name="message" placeholder="What would you like to talk about?"></textarea></label>
+        <button type="submit">Copy message →</button>
+        <p class="formmsg" id="formmsg" role="status"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap"><span class="tag">Nguyen Cao Hoang · Hanoi, Vietnam</span><span class="tag">Built 2026</span></div></footer>
+
+<script>
+(()=>{
+  // Study OS calendar: ~380 days, about 1-2 blue (missed) days per month, deterministic pattern
+  const cal=document.getElementById('cal');
+  let seed=7;const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
+  const frag=document.createDocumentFragment();
+  for(let d=0;d<380;d++){const i=document.createElement('i');if(rnd()<.05)i.className='m';frag.appendChild(i)}
+  cal.appendChild(frag);
+
+  // active nav link while scrolling
+  const links=[...document.querySelectorAll('[data-sec]')];
+  const io=new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting)links.forEach(a=>a.classList.toggle('cur',a.dataset.sec===e.target.id));
+  }),{rootMargin:'-45% 0px -50% 0px'});
+  ['work','about','contact'].forEach(id=>io.observe(document.getElementById(id)));
+
+  // contact form: this page cannot send mail, so it copies a ready message instead
+  const form=document.getElementById('form'),msg=document.getElementById('formmsg');
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    const n=form.name.value.trim(),em=form.email.value.trim(),m=form.message.value.trim();
+    if(!n||!m){msg.textContent='Add your name and a message first.';return}
+    const text=`From: ${n}${em?' <'+em+'>':''}\n\n${m}`;
+    const done=()=>{msg.textContent='Message copied. Paste it into an email to me.'};
+    try{navigator.clipboard.writeText(text).then(done,()=>{form.message.select();msg.textContent='Select-all is on. Copy it with Ctrl+C.'})}
+    catch(_){form.message.select();msg.textContent='Select-all is on. Copy it with Ctrl+C.'}
+  });
+})();
+</script>
