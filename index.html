@@ -258,7 +258,36 @@ main,footer,.nav{position:relative;z-index:1}
 .f2 .log img{aspect-ratio:1/1}
 @keyframes drift{0%,100%{translate:0 0}30%{translate:7px -12px}65%{translate:-6px -3px}}
 
-/* growth timeline */
+/* horizontal growth timeline: each year is a slot of three rows (above spine / node / below spine);
+   the card at screen centre is sharp, neighbours soften, shrink and lean away */
+.tlx{position:relative}
+.tlx-pin{position:sticky;top:0;height:100svh;overflow:hidden;display:grid;grid-template-rows:auto minmax(0,1fr)}
+.tlx-head{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:84px var(--gxr) 0 var(--gx)}
+.tlx-bar i{transform:scaleX(var(--tp,0))}
+.tlx-count{font-variant-numeric:tabular-nums}
+.tlx-track{position:relative;display:flex;align-items:stretch;gap:clamp(36px,5vw,96px);height:100%;padding:0 30vw 0 36vw;width:max-content;will-change:transform;perspective:1400px}
+.tlx-spine{position:absolute;left:0;right:0;top:50%;height:1px;background:linear-gradient(90deg,transparent,var(--line) 4%,var(--line) 96%,transparent)}
+.tlx-spine i{position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--accent));transform-origin:left;transform:scaleX(var(--tp,0));opacity:.7}
+.tl-slot{position:relative;flex:0 0 auto;display:grid;grid-template-rows:minmax(0,1fr) 11px minmax(0,1fr);row-gap:26px}
+.tl-node{grid-row:2;width:11px;height:11px;border-radius:50%;border:1px solid var(--muted);background:var(--bg);transition:background .4s,border-color .4s,box-shadow .4s}
+.tl-card{width:clamp(260px,25vw,390px);transform-style:preserve-3d;will-change:transform,opacity,filter}
+.tl-slot.up .tl-card{grid-row:1;align-self:end}
+.tl-slot.down .tl-card{grid-row:3;align-self:start}
+.tl-card.wide{width:clamp(440px,44vw,740px);display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1fr);gap:clamp(18px,2.4vw,36px);align-items:center}
+.tl-card time{display:block;font:500 11px var(--mono);letter-spacing:.16em;color:var(--muted);margin-bottom:10px;transition:color .4s}
+.tl-card p{margin:0;font:300 clamp(19px,1.9vw,26px)/1.3 var(--display);font-stretch:112%}
+.tl-slot.lit .tl-node{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 20%,transparent)}
+.tl-slot.lit time{color:var(--accent)}
+.tl-card .log{max-width:100%;max-height:34svh}
+.tl-card .log img,.tl-card .log video{max-height:calc(34svh - 56px)}
+.tl-card .log.portrait video{aspect-ratio:3/4}
+.tl-card .stack{display:grid}
+.tl-card .stack .log:first-child{width:70%}
+.tl-card .stack .log:last-child{width:62%;justify-self:end;margin-top:-34%}
+.tl-end{flex:0 0 auto;align-self:center;padding-left:2vw}
+.tl-end .mono{color:var(--muted)}
+
+/* growth timeline (legacy rows, unused) */
 .chrono{position:relative;list-style:none;margin:12vh 0 0;padding:0}
 .chrono::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(transparent,var(--line) 6%,var(--line) 94%,transparent)}
 .row{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:clamp(40px,7vw,96px);align-items:start;padding:26px 0}
@@ -353,6 +382,18 @@ footer{border-top:1px solid var(--line);padding:26px var(--gxr) 26px var(--gx);d
   .mem-copy{position:relative;left:auto;top:auto;translate:none;width:auto;order:-1;text-shadow:none}
   .f1{width:min(86%,360px);margin:0 0 18px auto}
   .f2{margin-left:0}
+  .tlx{height:auto!important}
+  .tlx-pin{position:relative;height:auto;overflow:visible;display:block}
+  .tlx-head{padding-top:10vh}
+  .tlx-track{flex-direction:column;width:auto;height:auto;padding:5vh var(--gxr) 4vh calc(var(--gx) + 26px);gap:6vh;transform:none!important}
+  .tlx-spine{left:calc(var(--gx) + 5px);right:auto;top:0;bottom:0;width:1px;height:auto;background:var(--line)}
+  .tlx-spine i{display:none}
+  .tl-slot{display:block;position:relative}
+  .tl-node{position:absolute;left:-26px;top:4px}
+  .tl-card,.tl-card.wide{width:auto;display:block;opacity:1!important;filter:none!important;transform:none!important}
+  .tl-card .log{margin-top:18px;max-height:none;width:min(100%,380px)}
+  .tl-card .log img,.tl-card .log video{max-height:none}
+  .tl-end{display:none}
   .chrono::before{left:4px}
   .row{grid-template-columns:minmax(0,1fr);row-gap:22px;padding-left:28px}
   .row::before{left:4px;top:30px}
@@ -437,46 +478,56 @@ footer{border-top:1px solid var(--line);padding:26px var(--gxr) 26px var(--gx);d
         </div></div>
       </div>
     </div>
-    <!-- Growth timeline: zigzag around a centre spine; photos sit beside the years they belong to, framed as retrieved logs -->
-    <ol class="chrono" aria-label="Timeline">
-      <li class="row t-l"><div class="txt"><time>PRIMARY</time><p>Average grades. English was my weakest subject.</p></div></li>
-      <li class="row t-r"><div class="txt"><time>GRADE 6–8</time><p>Changed schools and climbed to ~9.2/10. Learned to present; won a city science fair prize.</p></div></li>
-      <li class="row t-l"><div class="txt"><time>GRADE 9</time><p>Chased a specialised physics class from zero and fell short. Effort needs a system.</p></div></li>
-      <li class="row t-r has-media"><div class="txt"><time>GRADE 10</time><p>Rebuilt how I study, on my own terms. Presented or led most group projects.</p></div>
-        <div class="media">
+  </section>
+
+  <!-- Growth timeline, horizontal: vertical scroll slides the years sideways along a spine -->
+  <section class="tlx" id="timeline" aria-label="Timeline">
+    <div class="tlx-pin">
+      <div class="tlx-head"><span class="mono scan">Path · Primary → 2026</span><span class="hx-bar tlx-bar"><i></i></span><span class="mono tlx-count">01 / 07</span></div>
+      <div class="tlx-track">
+        <div class="tlx-spine" aria-hidden="true"><i></i></div>
+        <article class="tl-slot up"><span class="tl-node"></span><div class="tl-card"><time>PRIMARY</time><p>Average grades. English was my weakest subject.</p></div></article>
+        <article class="tl-slot down"><span class="tl-node"></span><div class="tl-card"><time>GRADE 6–8</time><p>Changed schools and climbed to ~9.2/10. Learned to present; won a city science fair prize.</p></div></article>
+        <article class="tl-slot up"><span class="tl-node"></span><div class="tl-card"><time>GRADE 9</time><p>Chased a specialised physics class from zero and fell short. Effort needs a system.</p></div></article>
+        <article class="tl-slot down"><span class="tl-node"></span><div class="tl-card wide">
+          <div class="tl-txt"><time>GRADE 10</time><p>Rebuilt how I study, on my own terms. Presented or led most group projects.</p></div>
           <figure class="log" style="--r:-1.6deg">
             <span class="k tl">+</span><span class="k tr">+</span><span class="k bl">+</span><span class="k br">+</span>
             <span class="tag-l">SYS_REC_01 // 22.12.2025</span><span class="tag-r">LOC_HA_NOI</span>
             <img src="media/life-desk.jpg" alt="Study desk at night with notes, calculator and laptop" loading="lazy">
             <figcaption><span>Where most of the work happens</span><span>01/03</span></figcaption>
           </figure>
-        </div></li>
-      <li class="row t-l has-media"><div class="txt"><time>GRADE 11</time><p>Joined inter-school clubs and a robotics club. Taught myself CAD.</p></div>
-        <div class="media">
-          <figure class="log" style="--r:1.8deg">
+        </div></article>
+        <article class="tl-slot up"><span class="tl-node"></span><div class="tl-card wide">
+          <div class="tl-txt"><time>GRADE 11</time><p>Joined inter-school clubs and a robotics club. Taught myself CAD.</p></div>
+          <figure class="log portrait" style="--r:1.8deg">
             <span class="k tl">+</span><span class="k tr">+</span><span class="k bl">+</span><span class="k br">+</span>
-            <span class="tag-l">SYS_REC_00 // ROBOTICS_LAB</span><span class="tag-r">LOC_HA_NOI</span>
+            <span class="tag-l">SYS_REC_00 // ROBOTICS</span><span class="tag-r">LOC_HA_NOI</span>
             <video src="media/life-robot.mp4" poster="media/life-robot.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Robotics club build: aluminium robot frame and parts on the floor"></video>
             <figcaption><span>Build day at the robotics club</span><span>REC</span></figcaption>
           </figure>
-        </div></li>
-      <li class="row t-r"><div class="txt"><time>2025–26</time><p>Made short science and history videos to learn editing and animation. Entered the Breakthrough Junior Challenge with a video on the Kakeya conjecture.</p><span class="badge-bjc">BJC · submitted · results pending</span></div></li>
-      <li class="row t-l has-media last"><div class="txt"><time>2026</time><p>Shipped Haziverse and Inkwell, built the RC car. Next: engineering in Taiwan.</p></div>
-        <div class="media stack">
-          <figure class="log tall" style="--r:-2deg">
-            <span class="k tl">+</span><span class="k tr">+</span><span class="k bl">+</span><span class="k br">+</span>
-            <span class="tag-l">SYS_REC_02 // 14.10.2026</span><span class="tag-r">TASK_LOG</span>
-            <img src="media/life-list.jpg" alt="Handwritten daily task list with every item ticked" loading="lazy">
-            <figcaption><span>A daily list, ticked by hand</span><span>02/03</span></figcaption>
-          </figure>
-          <figure class="log" style="--r:3deg">
-            <span class="k tl">+</span><span class="k tr">+</span><span class="k bl">+</span><span class="k br">+</span>
-            <span class="tag-l">SYS_REC_03 // 07.2026</span><span class="tag-r">CAL_VIEW</span>
-            <img src="media/life-calendar.jpg" alt="Desk calendar for July 2026 with most days shaded green" loading="lazy">
-            <figcaption><span>Green day: the list got done</span><span>03/03</span></figcaption>
-          </figure>
-        </div></li>
-    </ol>
+        </div></article>
+        <article class="tl-slot down"><span class="tl-node"></span><div class="tl-card"><time>2025–26</time><p>Made short science and history videos to learn editing and animation. Entered the Breakthrough Junior Challenge.</p><span class="badge-bjc">BJC · submitted · results pending</span></div></article>
+        <article class="tl-slot up last"><span class="tl-node"></span><div class="tl-card wide">
+          <div class="tl-txt"><time>2026</time><p>Shipped Haziverse and Inkwell, built the RC car. Next: engineering in Taiwan.</p></div>
+          <div class="stack">
+            <figure class="log tall" style="--r:-2deg">
+              <span class="k tl">+</span><span class="k tr">+</span><span class="k bl">+</span><span class="k br">+</span>
+              <span class="tag-l">SYS_REC_02 // 14.10.2026</span><span class="tag-r">TASK_LOG</span>
+              <img src="media/life-list.jpg" alt="Handwritten daily task list with every item ticked" loading="lazy">
+              <figcaption><span>A daily list, ticked by hand</span><span>02/03</span></figcaption>
+            </figure>
+            <figure class="log" style="--r:3deg">
+              <span class="k tl">+</span><span class="k tr">+</span><span class="k bl">+</span><span class="k br">+</span>
+              <span class="tag-l">SYS_REC_03 // 07.2026</span><span class="tag-r">CAL_VIEW</span>
+              <img src="media/life-calendar.jpg" alt="Desk calendar for July 2026 with most days shaded green" loading="lazy">
+              <figcaption><span>Green day: the list got done</span><span>03/03</span></figcaption>
+            </figure>
+          </div>
+        </div></article>
+        <div class="tl-end" aria-hidden="true"><span class="mono">To be continued</span></div>
+      </div>
+    </div>
   </section>
 
   <!-- Memory field: clips from my science and history videos float in depth; scrolling flies through them -->
@@ -588,16 +639,59 @@ document.querySelectorAll('[data-split]').forEach(el=>{el.innerHTML=split(el.tex
 
 
 /* dots + nav */
-const secs=[['intro','Intro'],['projects','Work'],['about','About'],['memories','Videos'],['contact','Contact']];
+const secs=[['intro','Intro'],['projects','Work'],['about','About'],['timeline','Path'],['memories','Videos'],['contact','Contact']];
 $('#dots').innerHTML=secs.map(([id])=>`<a href="#${id}" data-dot="${id}"></a>`).join('');
 
-/* ---------- dust canvas ---------- */
+/* ---------- starfield: depth parallax, gentle cursor pull, and the odd comet ---------- */
 const cv=$('#dust'),ctx=cv.getContext('2d');let W,H,D;const dust=[];
 function size(){D=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*D;cv.height=H*D;ctx.setTransform(D,0,0,D,0,0)}
 size();addEventListener('resize',size);
-for(let i=0;i<(innerWidth<700?90:180);i++)dust.push({x:Math.random(),y:Math.random(),z:Math.random(),s:Math.random()*1.4+.3,o:Math.random()<.07});
-const mouse={x:0,y:0,tx:0,ty:0};
-addEventListener('pointermove',e=>{mouse.tx=e.clientX/W-.5;mouse.ty=e.clientY/H-.5});
+const STARS=innerWidth<700?170:430;
+for(let i=0;i<STARS;i++){const z=Math.pow(Math.random(),1.6);  // most stars far away, a few close
+  dust.push({x:Math.random(),y:Math.random(),z,s:.35+z*1.7,o:Math.random()<.06,tw:Math.random()*6.28,ts:.6+Math.random()*1.8,px:0,py:0});}
+const mouse={x:0,y:0,tx:0,ty:0,px:-9999,py:-9999};
+addEventListener('pointermove',e=>{mouse.tx=e.clientX/W-.5;mouse.ty=e.clientY/H-.5;mouse.px=e.clientX;mouse.py=e.clientY});
+document.addEventListener('pointerleave',()=>{mouse.px=-9999;mouse.py=-9999});
+const PULL_R=170;      // cursor influence radius (px)
+const comets=[];let nextComet=performance.now()+2500;
+function spawnComet(now){
+  const fromLeft=Math.random()<.5,speed=7+Math.random()*5,ang=(Math.random()*.25+.05)*(Math.random()<.5?1:-1);
+  comets.push({x:fromLeft?-60:W+60,y:H*(.08+Math.random()*.55),vx:(fromLeft?1:-1)*speed*Math.cos(ang),vy:speed*Math.sin(ang)+.6,trail:[],life:0});
+  nextComet=now+3500+Math.random()*4500;
+}
+function drawStars(now,sy){
+  const t=now/1000,still=!motionOK();
+  for(const d of dust){
+    // base position: depth parallax against scroll and cursor (near stars move a lot more)
+    let x=d.x*W+(still?0:mouse.x*-220*d.z), y=d.y*H-(still?0:sy*(.08+d.z*.55))+(still?0:mouse.y*-120*d.z);
+    x=((x%W)+W)%W; y=((y%H)+H)%H;
+    if(!still){
+      // gentle pull + slight swirl toward the cursor, eased so stars glide back when it leaves
+      const dx=mouse.px-x,dy=mouse.py-y,dist=Math.hypot(dx,dy);let tx=0,ty=0;
+      if(dist<PULL_R&&dist>1){const f=Math.pow(1-dist/PULL_R,2)*(10+d.z*22);tx=dx/dist*f-dy/dist*f*.45;ty=dy/dist*f+dx/dist*f*.45}
+      d.px+=(tx-d.px)*.08;d.py+=(ty-d.py)*.08;x+=d.px;y+=d.py;
+      d.y+=.00008*(d.z+.15);
+    }
+    const tw=still?1:.7+.3*Math.sin(t*d.ts+d.tw);
+    ctx.globalAlpha=(.18+d.z*.7)*tw;ctx.fillStyle=d.o?'#ff7a1a':'#eceef1';ctx.fillRect(x,y,d.s,d.s);
+  }
+  if(still)return;
+  // comets: every few seconds one crosses; the cursor bends its path a little
+  if(now>nextComet&&comets.length<2)spawnComet(now);
+  for(let i=comets.length-1;i>=0;i--){
+    const c=comets[i],dx=mouse.px-c.x,dy=mouse.py-c.y,dist=Math.hypot(dx,dy);
+    if(dist<260&&dist>20){const g=1.4/Math.max(dist/40,1.2);c.vx+=dx/dist*g;c.vy+=dy/dist*g}
+    c.x+=c.vx;c.y+=c.vy;c.life++;
+    c.trail.unshift([c.x,c.y]);if(c.trail.length>22)c.trail.pop();
+    for(let k=1;k<c.trail.length;k++){
+      const a=1-k/c.trail.length;ctx.globalAlpha=a*.55;ctx.strokeStyle=k<4?'#ffd2a8':'#eceef1';ctx.lineWidth=1.6*a+.3;
+      ctx.beginPath();ctx.moveTo(c.trail[k-1][0],c.trail[k-1][1]);ctx.lineTo(c.trail[k][0],c.trail[k][1]);ctx.stroke();
+    }
+    ctx.globalAlpha=.95;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(c.x,c.y,1.6,0,6.3);ctx.fill();
+    if(c.x<-200||c.x>W+200||c.y<-200||c.y>H+200||c.life>600)comets.splice(i,1);
+  }
+  ctx.globalAlpha=1;
+}
 
 /* ---------- horizontal project track ---------- */
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
@@ -683,7 +777,7 @@ function activeSection(){
   const mid=H*.45;let cur='intro';
   secs.forEach(([id])=>{const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<=mid)cur=id});
   dotLinks.forEach(a=>a.classList.toggle('cur',a.dataset.dot===cur));
-  const top=cur==='projects'?'work':cur==='memories'?'about':cur;
+  const top=cur==='projects'?'work':(cur==='memories'||cur==='timeline')?'about':cur;
   navLinks.forEach(a=>a.classList.toggle('cur',a.dataset.sec===top));
 }
 
@@ -715,22 +809,48 @@ function updateMem(){
 // small screens / reduced motion: play clips when they scroll into view
 const memIO=new IntersectionObserver(es=>es.forEach(e=>{if(motionOK())return;const v=e.target;e.isIntersecting?(v.preload='auto',v.play().catch(()=>{})):v.pause()}),{rootMargin:'80px 0px'});
 memClips.forEach(c=>memIO.observe(c.v));
+/* ---------- horizontal timeline: smooth (lerped) slide + depth falloff around the centre ---------- */
+const tlx=$('#timeline'),tlTrack=tlx.querySelector('.tlx-track'),tlBar=tlx.querySelector('.tlx-bar i'),tlSpine=tlx.querySelector('.tlx-spine i'),tlCount=tlx.querySelector('.tlx-count');
+const tlSlots=[...tlx.querySelectorAll('.tl-slot')].map(el=>({el,card:el.querySelector('.tl-card')}));
+let tlMax=0,tlX=0;
+function layoutTl(){
+  if(!motionOK()){tlx.style.height='';tlTrack.style.transform='';tlSlots.forEach(s=>s.card.removeAttribute('style'));return}
+  tlMax=Math.max(0,tlTrack.scrollWidth-innerWidth);
+  tlx.style.height=(innerHeight+tlMax*1.15)+'px';
+}
+function updateTl(){
+  if(!motionOK())return;
+  const r=tlx.getBoundingClientRect();if(r.bottom<-50||r.top>H+50)return;
+  const p=clamp(-r.top/(r.height-H));
+  tlX+=(p*tlMax-tlX)*.12;                       // ease toward the scroll target so the slide feels seamless
+  tlTrack.style.transform=`translate3d(${(-tlX).toFixed(1)}px,0,0)`;
+  const prog=tlMax?tlX/tlMax:0;
+  tlBar.style.setProperty('--tp',prog.toFixed(3));tlSpine.style.setProperty('--tp',prog.toFixed(3));
+  let cur=0;
+  tlSlots.forEach((s,i)=>{
+    const b=s.el.getBoundingClientRect(),c=(b.left+b.width/2-W/2)/W;   // -0.5..0.5 ≈ on screen
+    const a=Math.min(Math.abs(c),1);
+    s.card.style.opacity=(1-Math.min(a*1.25,.82)).toFixed(3);
+    s.card.style.filter=a>.04?`blur(${Math.min(a*5,4).toFixed(2)}px)`:'none';
+    s.card.style.transform=`translateZ(${(-a*180).toFixed(0)}px) rotateY(${(c*-14).toFixed(2)}deg)`;
+    s.el.classList.toggle('lit',c<.08);
+    if(c<.15)cur=i;
+  });
+  tlCount.textContent=`${String(cur+1).padStart(2,'0')} / ${String(tlSlots.length).padStart(2,'0')}`;
+}
+layoutTl();addEventListener('resize',layoutTl);addEventListener('load',layoutTl);
 /* ---------- one rAF loop ---------- */
 const introIn=$('#introIn');
 function frame(){
   mouse.x+=(mouse.tx-mouse.x)*.06;mouse.y+=(mouse.ty-mouse.y)*.06;
   ctx.clearRect(0,0,W,H);
   const sy=scrollY;
-  for(const d of dust){
-    const x=((d.x*W+mouse.x*60*d.z)%W+W)%W, y=(((d.y*H-sy*.15*d.z+mouse.y*40*d.z)%H)+H)%H;
-    d.y+=.00012*(d.z+.2);
-    ctx.globalAlpha=.25+d.z*.55;ctx.fillStyle=d.o?'#ff7a1a':'#eceef1';ctx.fillRect(x,y,d.s,d.s);
-  }
-  ctx.globalAlpha=1;
+  drawStars(performance.now(),sy);
   if(motionOK()){const k=Math.min(sy/H,1);introIn.style.transform=`translate3d(${(mouse.x*-14).toFixed(1)}px,${(k*-60).toFixed(1)}px,0)`;introIn.style.opacity=(1-k*.9).toFixed(3)}
   else{introIn.style.transform='';introIn.style.opacity=''}
   updateHx();
   updateMem();
+  updateTl();
   activeSection();
   requestAnimationFrame(frame);
 }
