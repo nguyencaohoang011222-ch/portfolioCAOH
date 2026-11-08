@@ -221,15 +221,23 @@ main,footer,.nav{position:relative;z-index:1}
 /* ambient side reels: break out of the content column, sit behind it, blurred and warm like old footage */
 .reels{position:absolute;top:0;bottom:0;left:calc(50% - 50vw);width:100vw;pointer-events:none;z-index:0;overflow:hidden}
 #about>*:not(.reels){position:relative;z-index:1}
-.reel{position:absolute;margin:0;width:min(24vw,380px);opacity:.42;animation:drift 14s ease-in-out infinite}
-.reel video{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:4px;
-  filter:blur(1.6px) sepia(30%) saturate(.8) brightness(.7) contrast(.95);
-  -webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 45%,transparent 100%);mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 45%,transparent 100%)}
-.reel figcaption{margin-top:6px;text-align:center;font:500 9px var(--mono);letter-spacing:.16em;color:var(--muted);opacity:.8}
-.r1{top:30%;left:-5vw;rotate:-3deg}
-.r2{top:44%;right:-4vw;rotate:2.5deg;animation-delay:-4s}
-.r3{top:63%;left:-3vw;rotate:2deg;animation-delay:-8s}
-.r4{top:80%;right:-5vw;rotate:-2deg;animation-delay:-11s}
+/* memories floating in space: each reel has its own depth (size, blur, opacity), drift path and breathing */
+.reel{position:absolute;margin:0;width:var(--w);opacity:var(--o);will-change:transform,translate,rotate,scale;
+  animation:var(--path) var(--dur) ease-in-out infinite,breathe calc(var(--dur) * .6) ease-in-out infinite;animation-delay:var(--delay),var(--delay)}
+.reel video{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:6px;
+  filter:blur(var(--blur)) sepia(30%) saturate(.8) brightness(.72) contrast(.95);
+  box-shadow:0 0 80px -10px color-mix(in srgb,#ffb070 18%,transparent);
+  -webkit-mask-image:radial-gradient(ellipse 72% 72% at 50% 50%,#000 42%,transparent 100%);mask-image:radial-gradient(ellipse 72% 72% at 50% 50%,#000 42%,transparent 100%)}
+.reel figcaption{margin-top:8px;text-align:center;font:500 9.5px var(--mono);letter-spacing:.18em;color:var(--muted);opacity:.75}
+/* near layers are larger and clearer, far layers smaller, softer, fainter */
+.r1{--w:min(40vw,640px);--o:.55;--blur:1.2px;--rot:-4deg;--path:floatA;--dur:19s;--delay:0s;top:20%;left:-9vw}
+.r2{--w:min(30vw,470px);--o:.38;--blur:2.4px;--rot:3deg;--path:floatB;--dur:23s;--delay:-6s;top:38%;right:-5vw}
+.r3{--w:min(36vw,560px);--o:.5;--blur:1.6px;--rot:2.5deg;--path:floatC;--dur:21s;--delay:-11s;top:57%;left:-7vw}
+.r4{--w:min(33vw,520px);--o:.44;--blur:2px;--rot:-2.5deg;--path:floatB;--dur:25s;--delay:-15s;top:76%;right:-8vw}
+@keyframes floatA{0%,100%{translate:0 0;rotate:var(--rot)}25%{translate:3vw -4vh;rotate:calc(var(--rot) + 2deg)}50%{translate:1vw -7vh;rotate:calc(var(--rot) - 1deg)}75%{translate:-2vw -3vh;rotate:calc(var(--rot) + 1deg)}}
+@keyframes floatB{0%,100%{translate:0 0;rotate:var(--rot)}30%{translate:-3vw -5vh;rotate:calc(var(--rot) - 2deg)}60%{translate:-1vw 3vh;rotate:calc(var(--rot) + 1.5deg)}80%{translate:2vw -2vh;rotate:var(--rot)}}
+@keyframes floatC{0%,100%{translate:0 0;rotate:var(--rot)}35%{translate:2.5vw 4vh;rotate:calc(var(--rot) + 2deg)}70%{translate:-2vw -4vh;rotate:calc(var(--rot) - 1.5deg)}}
+@keyframes breathe{0%,100%{scale:1}50%{scale:1.05}}
 .badge-bjc{display:inline-block;margin-top:12px;font:500 10px var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:5px 9px;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));border-radius:99px;color:var(--accent)}
 
 /* floating CAD sheets around the bio (outer div drifts, inner .log tilts) */
@@ -384,10 +392,10 @@ footer{border-top:1px solid var(--line);padding:26px var(--gxr) 26px var(--gx);d
   <section class="block" id="about">
     <!-- ambient side reels: soft, warm, half-remembered clips from my science videos -->
     <div class="reels" aria-hidden="true">
-      <figure class="reel r1"><video src="media/vid-bjc-talk.mp4" poster="media/vid-bjc-talk.jpg" muted loop playsinline preload="none"></video><figcaption>REC // BJC_2026 · KAKEYA</figcaption></figure>
-      <figure class="reel r2"><video src="media/vid-minecraft.mp4" poster="media/vid-minecraft.jpg" muted loop playsinline preload="none"></video><figcaption>REC // MINECRAFT_EXPLAINER</figcaption></figure>
-      <figure class="reel r3"><video src="media/vid-history.mp4" poster="media/vid-history.jpg" muted loop playsinline preload="none"></video><figcaption>REC // HISTORY_SHORT</figcaption></figure>
-      <figure class="reel r4"><video src="media/vid-bjc-anim.mp4" poster="media/vid-bjc-anim.jpg" muted loop playsinline preload="none"></video><figcaption>REC // BJC_2026 · ANIMATION</figcaption></figure>
+      <figure class="reel r1" data-depth=".22"><video src="media/vid-bjc-talk.mp4" poster="media/vid-bjc-talk.jpg" muted loop playsinline preload="none"></video><figcaption>REC // BJC_2026 · KAKEYA</figcaption></figure>
+      <figure class="reel r2" data-depth=".08"><video src="media/vid-minecraft.mp4" poster="media/vid-minecraft.jpg" muted loop playsinline preload="none"></video><figcaption>REC // MINECRAFT_EXPLAINER</figcaption></figure>
+      <figure class="reel r3" data-depth=".17"><video src="media/vid-history.mp4" poster="media/vid-history.jpg" muted loop playsinline preload="none"></video><figcaption>REC // HISTORY_SHORT · B&W</figcaption></figure>
+      <figure class="reel r4" data-depth=".12"><video src="media/vid-bjc-dissolve.mp4" poster="media/vid-bjc-dissolve.jpg" muted loop playsinline preload="none"></video><figcaption>REC // BJC_2026 · FACE → FIELD</figcaption></figure>
     </div>
     <span class="mono scan">About</span>
     <h2 class="big">Slow start. <span class="thin">Steady build.</span></h2>
@@ -653,6 +661,7 @@ function activeSection(){
   navLinks.forEach(a=>a.classList.toggle('cur',a.dataset.sec===top));
 }
 
+const reelEls=[...document.querySelectorAll('.reel')];
 /* ---------- one rAF loop ---------- */
 const introIn=$('#introIn');
 function frame(){
@@ -668,6 +677,12 @@ function frame(){
   if(motionOK()){const k=Math.min(sy/H,1);introIn.style.transform=`translate3d(${(mouse.x*-14).toFixed(1)}px,${(k*-60).toFixed(1)}px,0)`;introIn.style.opacity=(1-k*.9).toFixed(3)}
   else{introIn.style.transform='';introIn.style.opacity=''}
   updateHx();
+  // reels: nearer layers drift faster against the scroll than far ones (depth parallax) and lean toward the cursor
+  if(motionOK())for(const rl of reelEls){
+    const r=rl.getBoundingClientRect();if(r.bottom<-200||r.top>H+200)continue;
+    const d=+rl.dataset.depth,off=(r.top+r.height/2-H/2)*-d;
+    rl.style.transform=`translate3d(${(mouse.x*-120*d).toFixed(1)}px,${off.toFixed(1)}px,0)`;
+  }
   activeSection();
   requestAnimationFrame(frame);
 }
