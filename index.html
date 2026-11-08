@@ -218,6 +218,18 @@ main,footer,.nav{position:relative;z-index:1}
 .lang em{font:400 11.5px var(--mono);font-style:normal;color:var(--muted)}
 
 .contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);margin-top:6vh}
+/* floating CAD sheets around the bio (outer div drifts, inner .log tilts) */
+#about{position:relative}
+#about .big{max-width:min(62%,760px)}
+.floater{animation:drift 11s ease-in-out infinite}
+.floater .log img{aspect-ratio:10/7}
+.f1{position:relative;z-index:3;width:min(100%,380px);justify-self:end;margin:-220px 0 18px auto}
+.f1 .log{--r:4deg}
+.f2{width:min(100%,360px);margin:34px 0 0 6%;animation-duration:13s;animation-delay:-5s}
+.f2 .log{--r:-3deg}
+.f2 .log img{aspect-ratio:1/1}
+@keyframes drift{0%,100%{translate:0 0}30%{translate:7px -12px}65%{translate:-6px -3px}}
+
 /* growth timeline */
 .chrono{position:relative;list-style:none;margin:12vh 0 0;padding:0}
 .chrono::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(transparent,var(--line) 6%,var(--line) 94%,transparent)}
@@ -303,6 +315,9 @@ footer{border-top:1px solid var(--line);padding:26px var(--gxr) 26px var(--gx);d
   .cal.big{gap:2px}
   .ticker{grid-template-columns:repeat(2,minmax(0,1fr))}
   .about,.contact{grid-template-columns:minmax(0,1fr)}
+  #about .big{max-width:none}
+  .f1{width:min(86%,360px);margin:0 0 18px auto}
+  .f2{margin-left:0}
   .chrono::before{left:4px}
   .row{grid-template-columns:minmax(0,1fr);row-gap:22px;padding-left:28px}
   .row::before{left:4px;top:30px}
@@ -358,8 +373,25 @@ footer{border-top:1px solid var(--line);padding:26px var(--gxr) 26px var(--gx);d
       <div>
         <p>I was an average student who learned to speak up before I learned to study.</p>
         <p>I grow by trying, falling short and redesigning how I work. Next, I want to design production systems that waste less time, energy and material.</p>
+        <div class="floater f2">
+          <figure class="log">
+            <span class="k tl">+</span><span class="k tr">+</span><span class="k bl">+</span><span class="k br">+</span>
+            <span class="tag-l">CAD_02 // ONSHAPE</span><span class="tag-r">41 PARTS</span>
+            <img src="media/cad-parts.jpg" alt="Onshape practice file with a name plate reading Cao Hoang, a gear-like hub and a triangular bracket" loading="lazy">
+            <figcaption><span>Self-taught practice file</span><span>CAD</span></figcaption>
+          </figure>
+        </div>
       </div>
       <div class="skills">
+        <!-- CAD shots drift around the bio like loose sheets -->
+        <div class="floater f1">
+          <figure class="log">
+            <span class="k tl">+</span><span class="k tr">+</span><span class="k bl">+</span><span class="k br">+</span>
+            <span class="tag-l">CAD_01 // ONSHAPE</span><span class="tag-r">27 FEATURES</span>
+            <img src="media/cad-stool.jpg" alt="Onshape model of a plastic stool with a textured seat and arched sides" loading="lazy">
+            <figcaption><span>Plastic stool, 4 parts</span><span>CAD</span></figcaption>
+          </figure>
+        </div>
         <div><h3>Software</h3><div class="chips"><span class="chip">Product design</span><span class="chip">UI/UX</span><span class="chip">AI-assisted dev</span><span class="chip">TypeScript</span><span class="chip">Electron</span><span class="chip">Supabase</span></div></div>
         <div><h3>Hardware</h3><div class="chips"><span class="chip">ESP8266 / NodeMCU</span><span class="chip">Motor drivers</span><span class="chip">Wiring &amp; debugging</span><span class="chip">Onshape CAD</span></div></div>
         <div><h3>People</h3><div class="chips"><span class="chip">Presenting</span><span class="chip">Team lead</span><span class="chip">Slides</span><span class="chip">Video editing</span></div></div>
