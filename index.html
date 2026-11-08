@@ -46,8 +46,8 @@ main,footer,.nav{position:relative;z-index:1}
 .nav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:70;display:flex;justify-content:space-between;align-items:center;
   padding:14px var(--gxr) 14px var(--gx);background:color-mix(in srgb,var(--bg) 60%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
   border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font:600 13px var(--display);font-stretch:112%;letter-spacing:.18em;text-transform:uppercase}
-.logo i{display:grid;place-items:center;width:26px;height:26px;border:1.5px solid var(--accent);color:var(--accent);font:500 10px var(--mono);font-style:normal;border-radius:3px;letter-spacing:0}
+.logo{text-decoration:none;font:800 17px var(--display);font-stretch:125%;letter-spacing:.06em;text-transform:uppercase;transition:color .2s}
+.logo:hover{color:var(--accent)}
 .nav nav{display:flex;gap:clamp(12px,2.4vw,28px);align-items:center}
 .nav nav a{text-decoration:none;font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);transition:color .25s}
 .nav nav a:hover,.nav nav a.cur{color:var(--fg)}
@@ -65,9 +65,10 @@ main,footer,.nav{position:relative;z-index:1}
 .status b{position:relative;width:7px;height:7px;border-radius:50%;background:var(--accent)}
 .status b::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--accent);animation:ping 1.8s ease-out infinite}
 @keyframes ping{from{opacity:.7;transform:scale(1)}to{opacity:0;transform:scale(3.2)}}
-.name{font-size:clamp(44px,10.5vw,152px);line-height:.88;font-weight:800;font-stretch:125%;letter-spacing:-.02em;text-transform:uppercase}
+.name{font-size:clamp(40px,8.2vw,132px);line-height:.9;font-weight:800;font-stretch:125%;letter-spacing:-.02em;text-transform:uppercase}
 .name .ln{display:block;overflow:hidden;padding-bottom:.04em}
-.name .ln span{display:inline-block;animation:up 1s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*.035s + .1s)}
+.w{display:inline-block;white-space:nowrap}
+.name .c{display:inline-block;animation:up 1s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*.035s + .1s)}
 @keyframes up{from{transform:translateY(105%)}to{transform:none}}
 .name .thin{font-weight:100;color:color-mix(in srgb,var(--fg) 72%,transparent)}
 .claim{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:20px;margin-top:28px}
@@ -97,8 +98,8 @@ main,footer,.nav{position:relative;z-index:1}
 .ch-no::after{content:"";flex:0 0 46px;height:1px;background:var(--line)}
 .title{font-size:clamp(40px,6.2vw,92px);line-height:.9;font-weight:800;font-stretch:125%;letter-spacing:-.02em;text-transform:uppercase}
 .title .ln{display:block;overflow:hidden;padding-bottom:.05em}
-.title span{display:inline-block}
-.chapter.on .title span{animation:up .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*.03s)}
+.title .c{display:inline-block}
+.chapter.on .title .c{animation:up .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*.03s)}
 .tagline{margin:16px 0 0;color:var(--muted);font-size:clamp(15px,1.4vw,17px);max-width:34ch}
 .pill{display:inline-flex;align-items:center;gap:8px;margin-top:18px;font:500 10.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:6px 10px;border-radius:99px;border:1px solid var(--line)}
 .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
@@ -240,7 +241,7 @@ footer{border-top:1px solid var(--line);padding:26px var(--gxr) 26px var(--gx);d
 <div class="grid" aria-hidden="true"></div>
 
 <header class="nav">
-  <a class="logo" href="#top"><i>NCH</i>Hoang</a>
+  <a class="logo" href="#top" aria-label="CAOH, back to top">CAOH</a>
   <nav aria-label="Sections"><a href="#work" data-sec="work">Work</a><a href="#about" data-sec="about">About</a><a class="cta" href="#contact" data-sec="contact">Contact</a></nav>
 </header>
 <div class="dots" id="dots" aria-hidden="true"></div>
@@ -351,7 +352,8 @@ const FILM=[['GRADE 11','First try, gave up'],['OCT 2026','Restart on NodeMCU'],
 const ROAD=['V1 CSV','V2 PDF','V3 Links','V4 Collect','V5 Social'];
 
 /* ---------- build chapters ---------- */
-const split=t=>[...t].map((c,i)=>`<span style="--i:${i}">${c===' '?'&nbsp;':c}</span>`).join('');
+// letters animate one by one, but each word stays on one line (no break inside a word)
+const split=t=>{let i=0;return t.trim().split(/\s+/).map(w=>`<span class="w">${[...w].map(c=>`<span class="c" style="--i:${i++}">${c}</span>`).join('')}</span>`).join(' ')};
 const media=(f,cap,ci,fi)=>{
   const vid=f.endsWith('.mp4');
   const el=vid?`<video src="media/${f}" muted loop playsinline preload="metadata"></video>`:`<img src="media/${f}.jpg" alt="${cap}" loading="lazy" decoding="async">`;
